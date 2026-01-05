@@ -1,0 +1,1024 @@
+РОЗТАШУВАННЯ БЛОКІВ В HTML/CSS
+==============================
+
+display: block
+--------------
+- Елемент займає всю ширину контейнера.
+- Починається з нового рядка.
+- Можна задавати ширину, висоту, відступи.
+- Приклади: <div>, <p>, <section>.
+
+display: inline
+---------------
+- Не починається з нового рядка.
+- Займає тільки ширину свого тексту/контенту.
+- Не можна задавати ширину чи висоту.
+- Приклади: <span>, <a>, <strong>.
+
+display: inline-block
+---------------------
+- Стоїть у рядку як inline.
+- Можна задавати ширину та висоту як block.
+- Добре підходить для кнопок, міні-блоків, меню.
+
+display: flex
+-------------
+- Контейнер, що керує розташуванням внутрішніх елементів.
+- Зручно для центрування, рівномірних відступів.
+- Основні властивості:
+    flex-direction
+    justify-content
+    align-items
+    flex-wrap
+
+display: inline-flex
+--------------------
+- Те саме, що flex, але сам контейнер — inline-елемент.
+
+display: grid
+-------------
+- Система сіток для складних макетів.
+- Можна робити колонки, ряди, адаптивні структури.
+- Основні властивості:
+    grid-template-columns
+    grid-template-rows
+    gap
+
+display: none
+-------------
+- Елемент повністю зникає з документа.
+- Не займає місця.
+
+Короткі підказки
+----------------
+- block — секції, великі контейнери.
+- inline — елементи в тексті.
+- inline-block — кнопки, маленькі блоки в ряд.
+- flex — меню, картки, вирівнювання.
+- grid — складні макети та сітки.
+
+
+
+
+============================================
+-------------------------
+  ІНСТРУКЦІЯ ПО BOOTSTRAP
+-------------------------
+
+Bootstrap 5 — популярний CSS фреймворк,
+який дозволяє швидко створювати адаптивні,
+красиві та функціональні веб-інтерфейси.
+
+-------------------------
+  1. ПІДКЛЮЧЕННЯ BOOTSTRAP
+-------------------------
+
+Для роботи достатньо підключити CSS і JS.
+
+CSS (у <head>):
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/
+dist/css/bootstrap.min.css" rel="stylesheet">
+
+JS (перед </body>):
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/
+dist/js/bootstrap.bundle.min.js"></script>
+
+-------------------------
+  2. СІТКА (GRID) BOOTSTRAP
+-------------------------
+
+Система сітки — основа адаптивності.
+
+.container
+  - Фіксована ширина, центрована.
+
+.container-fluid
+  - Ширина 100% на всю сторінку.
+
+.row
+  - Рядок, який містить колонки.
+
+.col
+  - Колонка, яка ділить рядок порівну.
+
+.col-{n}
+  - Колонка шириною n з 12 (1..12).
+
+.col-sm, col-md, col-lg, col-xl, col-xxl
+  - Колонки для різних розмірів екранів.
+
+-------------------------
+  Приклад сітки:
+-------------------------
+
+<div class="container">
+  <div class="row">
+    <div class="col-4">1/3 ширини</div>
+    <div class="col-8">2/3 ширини</div>
+  </div>
+</div>
+
+-------------------------
+  3. АДАПТИВНІСТЬ (BREAKPOINTS)
+-------------------------
+
+xs (мобільні) - <576px (без префікса)
+sm - ≥576px
+md - ≥768px
+lg - ≥992px
+xl - ≥1200px
+xxl - ≥1400px
+
+Приклад:
+<div class="col-12 col-md-6">
+  Колонка 12 на моб, 6 на md і вище
+</div>
+
+-------------------------
+  4. ТЕКСТОВІ КЛАСИ
+-------------------------
+
+.text-start
+  - Вирівнювання тексту по лівому краю.
+
+.text-center
+  - Центрування тексту.
+
+.text-end
+  - Вирівнювання тексту по правому краю.
+
+.text-muted
+  - Сірий колір тексту (приглушений).
+
+.text-primary
+  - Основний колір теми.
+
+.text-success
+  - Зелений (успішний).
+
+.text-danger
+  - Червоний (помилка).
+
+.text-warning
+  - Жовтий (попередження).
+
+.text-info
+  - Голубий (інформація).
+
+-------------------------
+  Приклад тексту:
+
+<p class="text-center text-primary">
+  Центрований синій текст
+</p>
+
+-------------------------
+  5. ФОН І КОЛЬОРИ
+-------------------------
+
+.bg-primary
+  - Фон з основним кольором.
+
+.bg-success
+  - Фон зеленого кольору.
+
+.bg-danger
+  - Фон червоного кольору.
+
+.bg-warning
+  - Фон жовтого кольору.
+
+.bg-info
+  - Фон голубого кольору.
+
+.bg-light
+  - Світло-сірий фон.
+
+.bg-dark
+  - Темно-сірий/чорний фон.
+
+-------------------------
+  6. КАРТКИ (CARDS)
+-------------------------
+
+Карточки — це блоки з рамкою, тінню,
+зазвичай з заголовком, тілом і футером.
+
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Заголовок</h5>
+    <p class="card-text">
+      Описовий текст картки.
+    </p>
+    <a href="#" class="btn btn-primary">Дія</a>
+  </div>
+</div>
+
+-------------------------
+  7. КНОПКИ (BUTTONS)
+-------------------------
+
+btn
+  - Базовий стиль кнопки.
+
+btn-primary
+  - Основна кнопка (синя).
+
+btn-secondary
+  - Сіра кнопка.
+
+btn-success
+  - Зелена кнопка.
+
+btn-danger
+  - Червона кнопка.
+
+btn-warning
+  - Жовта кнопка.
+
+btn-info
+  - Голуба кнопка.
+
+btn-light
+  - Світла кнопка.
+
+btn-dark
+  - Темна кнопка.
+
+btn-link
+  - Кнопка у вигляді посилання.
+
+-------------------------
+  Приклад кнопок:
+
+<button class="btn btn-primary">Основна</button>
+<button class="btn btn-danger">Помилка</button>
+
+-------------------------
+  8. ВІДСТУПИ (MARGIN, PADDING)
+-------------------------
+
+Відступи керуються класами:
+
+m-*
+  - margin (зовнішній відступ)
+
+p-*
+  - padding (внутрішній відступ)
+
+Синтаксис:
+
+{m/p}{t/b/l/r/x/y}-{0..5}
+
+t - top (верх)
+b - bottom (низ)
+l - left (ліворуч)
+r - right (праворуч)
+x - left + right
+y - top + bottom
+0 - 0px
+1 - 0.25rem (4px)
+2 - 0.5rem (8px)
+3 - 1rem (16px)
+4 - 1.5rem (24px)
+5 - 3rem (48px)
+
+-------------------------
+  Приклад:
+
+<div class="mt-3 mb-2 p-3">
+  Відступ зверху 1rem, знизу 0.5rem, падінг 1rem
+</div>
+
+-------------------------
+  9. ВИРІВНЮВАННЯ (ALIGNMENT)
+-------------------------
+
+text-center
+  - Текст по центру
+
+text-start
+  - Ліворуч
+
+text-end
+  - Праворуч
+
+d-flex
+  - Включити flexbox на елементі
+
+justify-content-*
+  - Вирівнювання по горизонталі у flexbox:
+
+  justify-content-start
+  justify-content-center
+  justify-content-end
+  justify-content-between
+  justify-content-around
+  justify-content-evenly
+
+align-items-*
+  - Вирівнювання по вертикалі у flexbox:
+
+  align-items-start
+  align-items-center
+  align-items-end
+
+-------------------------
+  Приклад flexbox:
+
+<div class="d-flex justify-content-center align-items-center"
+     style="height:100px;">
+  Центрований контент по вертикалі і горизонталі
+</div>
+
+-------------------------
+  10. ФОРМИ (FORMS)
+-------------------------
+
+input
+  - class="form-control" - стиль для полів вводу
+
+<select>
+  - class="form-select" - стиль для селекту
+
+<textarea>
+  - class="form-control" - для багаторядкового вводу
+
+checkbox/radio
+  - class="form-check-input"
+
+label
+  - class="form-check-label"
+
+form-check
+  - контейнер для checkbox/radio
+
+-------------------------
+  Приклад форми:
+
+<form>
+  <div class="mb-3">
+    <label for="email" class="form-label">
+      Email адреса
+    </label>
+    <input type="email" class="form-control" id="email"
+           placeholder="name@example.com">
+  </div>
+  <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input"
+           id="check1">
+    <label class="form-check-label" for="check1">
+      Запам’ятати мене
+    </label>
+  </div>
+  <button type="submit" class="btn btn-primary">
+    Відправити
+  </button>
+</form>
+
+-------------------------
+  11. СПИСКИ (LISTS)
+-------------------------
+
+ul.list-group
+  - Список із стилем Bootstrap
+
+li.list-group-item
+  - Елемент списку
+
+.list-group-item.active
+  - Активний елемент
+
+.list-group-item.disabled
+  - Неактивний елемент
+
+-------------------------
+  Приклад списку:
+
+<ul class="list-group">
+  <li class="list-group-item active">
+    Активний
+  </li>
+  <li class="list-group-item">
+    Звичайний
+  </li>
+  <li class="list-group-item disabled">
+    Заблокований
+  </li>
+</ul>
+
+-------------------------
+  12. МОДАЛЬНІ ВІКНА (MODAL)
+-------------------------
+
+<div class="modal" tabindex="-1" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Заголовок модалки</h5>
+        <button type="button" class="btn-close"
+          data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Текст модального вікна</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary"
+          data-bs-dismiss="modal">Закрити</button>
+        <button type="button" class="btn btn-primary">
+          Зберегти зміни</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+-------------------------
+  Відкрити модалку JS:
+
+var myModal = new bootstrap.Modal(
+  document.getElementById('myModal'));
+myModal.show();
+
+-------------------------
+  13. НАВІГАЦІЯ (NAVBAR)
+-------------------------
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Логотип</a>
+    <button class="navbar-toggler" type="button"
+      data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse"
+         id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">
+            Головна
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            Про нас
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+-------------------------
+  14. ЗОБРАЖЕННЯ (IMAGES)
+-------------------------
+
+.img-fluid
+  - Зробити зображення адаптивним (max-width:100%)
+
+.rounded
+  - Круглі кути
+
+.rounded-circle
+  - Коло
+
+.border
+  - Рамка навколо зображення
+
+-------------------------
+  Приклад:
+
+<img src="img.jpg" class="img-fluid rounded" alt="Фото">
+
+-------------------------
+  15. КОЛОНКИ FLEXBOX (D-FLEX)
+-------------------------
+
+d-flex
+  - Вмикає flex контейнер
+
+flex-row
+  - Вертикальна орієнтація (рядок)
+
+flex-column
+  - Вертикальний стовпець
+
+flex-wrap
+  - Дозволяє переносити елементи на наступний рядок
+
+justify-content-*
+  - Горизонтальне вирівнювання (початок, центр, кінець...)
+
+align-items-*
+  - Вертикальне вирівнювання
+
+-------------------------
+  16. КОРИСНІ КЛАСИ
+-------------------------
+
+.w-100
+  - Ширина 100%
+
+.h-100
+  - Висота 100%
+
+.visible
+  - Відображати елемент
+
+.invisible
+  - Сховати, але займати місце
+
+.shadow
+  - Тінь
+
+.rounded
+  - Закруглені краї
+
+.text-truncate
+  - Обрізати текст з трьома крапками
+
+-------------------------
+  17. ПОЗИЦІОНУВАННЯ
+-------------------------
+
+.position-relative
+  - Відносне позиціювання
+
+.position-absolute
+  - Абсолютне позиціювання
+
+.top-0, bottom-0, start-0, end-0
+  - Позиціонування на верх, низ, ліво, право
+
+.z-index-*
+  - Шарування (0..5)
+
+-------------------------
+  18. ВІДОБРАЖЕННЯ ТА СХОВАННЯ (DISPLAY)
+-------------------------
+
+d-none
+  - Сховати
+
+d-block
+  - Відобразити блоком
+
+d-inline
+  - Відобразити інлайн
+
+d-inline-block
+  - Відобразити інлайн-блоком
+
+-------------------------
+  19. ОКРЕМІ КЛАСИ ПО РОЗМІРАХ
+-------------------------
+
+d-sm-none
+  - Приховати на sm і вище
+
+d-md-block
+  - Показати блок на md і вище
+
+-------------------------
+  20. ІКОНКИ
+-------------------------
+
+Bootstrap Icons — окремий пакет іконок.
+
+Підключити:
+
+<link rel="stylesheet"
+ href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+Використання:
+
+<i class="bi bi-alarm"></i>
+
+-------------------------
+  ЗАГАЛЬНІ ПРАВИЛА:
+
+- Використовуй контейнери (.container/.container-fluid)  
+- Сітка .row містить колонки .col-*  
+- Використовуй flexbox для вирівнювання  
+- Відступи регулюй через m-*, p-*  
+- Застосовуй кольори для тексту і фону  
+- Кнопки стилізуй через btn і btn-*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bootstrap 5 Шпаргалка 
+
+------------------------------
+1. Контейнери (Containers)
+------------------------------
+.container        - фіксована ширина, адаптивна по
+                    брейкпойнтах
+.container-fluid  - ширина 100% viewport
+.container-sm     - фіксована ширина від 576px і вище
+.container-md     - від 768px і вище
+.container-lg     - від 992px і вище
+.container-xl     - від 1200px і вище
+.container-xxl    - від 1400px і вище
+
+------------------------------
+2. Сітка (Grid)
+------------------------------
+.row              - контейнер рядка для колонок
+.col              - авто ширина, рівномірний розподіл
+.col-#            - ширина в частинах з 12 (наприклад
+                    col-6 = 50%)
+.col-sm-#, .col-md-#, .col-lg-#, .col-xl-#, .col-xxl-#
+                  - ширина на відповідних брейкпойнтах
+
+Приклад:
+<div class="row">
+  <div class="col-6 col-md-4">...</div>
+  <div class="col-6 col-md-8">...</div>
+</div>
+
+------------------------------
+3. Відступи (Margins & Padding)
+------------------------------
+m  - margin (всі сторони)
+mt - margin-top
+mb - margin-bottom
+ml - margin-left
+mr - margin-right
+mx - margin-left & margin-right
+my - margin-top & margin-bottom
+
+p  - padding (всі сторони)
+pt - padding-top
+pb - padding-bottom
+pl - padding-left
+pr - padding-right
+px - padding-left & padding-right
+py - padding-top & padding-bottom
+
+Розміри (число від 0 до 5):
+0=0px, 1=0.25rem(4px), 2=0.5rem(8px), 3=1rem(16px),
+4=1.5rem(24px), 5=3rem(48px)
+
+Приклади:
+mt-3    -> margin-top: 1rem
+mx-2    -> margin-left & right: 0.5rem
+p-0     -> padding: 0
+py-4    -> padding-top & bottom: 1.5rem
+
+------------------------------
+4. Вирівнювання (Alignment)
+------------------------------
+Текст:
+.text-start   - ліворуч
+.text-center  - по центру
+.text-end     - праворуч
+
+Flex вертикальне вирівнювання:
+.align-items-start    - зверху
+.align-items-center   - по центру
+.align-items-end      - знизу
+
+Flex горизонтальне вирівнювання:
+.justify-content-start    - зліва
+.justify-content-center   - по центру
+.justify-content-end      - справа
+.justify-content-between  - простір між елементами
+.justify-content-around   - простір навколо елементів
+
+------------------------------
+5. Flexbox
+------------------------------
+.d-flex         - активує flex контейнер
+.flex-row       - напрямок по горизонталі (рядок,
+                   за замовчуванням)
+.flex-column    - напрямок по вертикалі (стовпець)
+.flex-wrap      - дозволяє перенос рядків
+.flex-nowrap    - забороняє перенос рядків
+
+------------------------------
+6. Порядок елементів (Order)
+------------------------------
+.order-0 ... .order-5  - порядок (0 за замовчуванням)
+.order-first           - ставить елемент першим
+.order-last            - ставить елемент останнім
+
+Можна з брейкпоінтами:
+.order-md-1, .order-lg-0 і т.п.
+
+------------------------------
+7. Ширина та висота (Width & Height)
+------------------------------
+.w-25, .w-50, .w-75, .w-100, .w-auto  - ширина (% або auto)
+.h-25, .h-50, .h-75, .h-100, .h-auto  - висота (% або auto)
+
+------------------------------
+8. Позиціонування (Position)
+------------------------------
+.position-static
+.position-relative
+.position-absolute
+.position-fixed
+.position-sticky
+
+------------------------------
+9. Інші корисні класи
+------------------------------
+.d-none          - сховати елемент
+.d-inline        - відображати inline
+.d-inline-block  - inline-block
+.d-block         - блочний елемент
+.visible         - видимий
+.invisible       - невидимий, але простір зберігається
+
+------------------------------
+10. Брейкпоінти (Media Queries)
+------------------------------
+xs: <576px
+sm: ≥576px
+md: ≥768px
+lg: ≥992px
+xl: ≥1200px
+xxl: ≥1400px
+
+------------------------------
+11. Приклад використання
+------------------------------
+<div class="container-md">
+  <div class="row justify-content-center align-items-center"
+       style="height:100vh;">
+    <div class="col-6 col-lg-4 p-3 border">
+      <p class="text-center mb-4">
+        Центрований блок із відступами
+      </p>
+      <button class="btn btn-primary w-100">
+        Кнопка на всю ширину
+      </button>
+    </div>
+  </div>
+</div>
+
+------------------------------
+Підсумок:
+- Контейнери: .container, .container-fluid і варіанти
+- Сітка: .row + .col-*
+- Відступи: m*, p* з розмірами 0-5
+- Вирівнювання: .text-*, .justify-content-*, .align-items-*
+- Flex: .d-flex + .flex-row/column + .flex-wrap
+- Порядок: .order-*
+- Розміри: .w-*, .h-*
+- Позиція: .position-*
+- Відображення: .d-*
+
+
+
+
+
+
+
+
+=================================
+
+
+ol-1..col-12      -> ширина колонки
+col-sm-*, col-md-* -> responsive колонки
+row               -> контейнер для колонок
+container         -> фіксована ширина сторінки
+container-fluid    -> повна ширина
+m-*, p-*           -> margin / padding
+mt-*, mb-*, mx-*   -> margin top / bottom / x-axis
+d-flex, justify-content-*, align-items-* -> flex utility
+img-fluid         -> адаптивні зображення
+form-control      -> стилізований input/textarea
+btn, btn-primary  -> кнопки
+
+Значення (Bootstrap): 0=0, 1=0.25rem, 2=0.5rem, 3=1rem, 4=1.5rem, 5=3rem, auto=auto
+
+
+col-md-6      -> на середніх екранах (>=768px) ширина 6/12 (50%)
+mx-auto       -> по горизонталі центр
+py-3          -> padding-top і padding-bottom = 1rem
+ms-2 / me-2   -> margin-start (ліворуч), margin-end (праворуч) — корисно для RTL/ліво-право нейтралітету
+g-3           -> gutter (відступ між колонками) 1rem
+
+# Display / Flex / Alignment
+d-block, d-inline, d-inline-block
+d-flex -> display:flex
+justify-content-center -> центрування по горизонталі у flex
+align-items-center -> вирівнювання по вертикалі у flex
+flex-column -> flex-direction: column
+
+# Width / Height / Text
+w-100 -> width:100%
+w-auto -> width:auto
+text-center, text-start, text-end -> вирівнювання тексту
+img-fluid -> max-width:100%; height:auto; (адаптивні зображення)
+
+# Кнопки і форми
+btn, btn-primary, btn-secondary, btn-outline-* -> стандартні класи кнопок
+form-control -> стилізований input / textarea / select
+input-group -> група інпутів з кнопками/іконками
+
+# Приклад форми:
+<form>
+  <input class="form-control mb-2" type="text" placeholder="Ім'я">
+  <input class="form-control mb-2" type="email" placeholder="Email">
+  <textarea class="form-control mb-2" rows="4" placeholder="Повідомлення"></textarea>
+  <button class="btn btn-primary" type="submit">Відправити</button>
+</form>
+
+
+badge, alert, card, nav, navbar, dropdown -> корисні компоненти Bootstrap
+rounded -> border-radius
+shadow -> тінь
+d-none -> display:none
+visible / invisible -> видимість (користуйся з CSS)
+
+
+<!-- ********** 3. Шаблони елементів (copy-paste ready) ********** -->
+<!-- Коментарі можна видалити. -->
+
+-- Центрована картка (логін / форма) --
+<div class="col-6 col-md-4 m-auto mt-5 card p-3" style="max-width:420px;">
+  <h2 class="text-center">Увійти</h2>
+  <form>
+    <input class="form-control mb-2" id="login" type="text" placeholder="Логін">
+    <input class="form-control mb-2" id="password" type="password" placeholder="Пароль">
+    <button class="btn btn-primary w-100" type="submit">Login</button>
+  </form>
+</div>
+
+-- Картка товару --
+<div class="card" style="max-width:320px;">
+  <img src="images/product.jpg" class="img-fluid card-img-top" alt="Назва продукту">
+  <div class="card-body">
+    <h5 class="card-title">Назва продукту</h5>
+    <p class="card-text">Короткий опис товару.</p>
+    <div class="d-flex justify-content-between align-items-center">
+      <span class="fw-bold">₴499</span>
+      <button class="btn btn-sm btn-success">Купити</button>
+    </div>
+  </div>
+</div>
+
+-- Галерея зображень (три в ряд) --
+<div class="row g-2">
+  <div class="col-12 col-sm-6 col-md-4">
+    <figure>
+      <img src="images/photo1.jpg" class="img-fluid rounded" alt="Фото 1" loading="lazy">
+      <figcaption class="small text-muted">Підпис 1</figcaption>
+    </figure>
+  </div>
+  <div class="col-12 col-sm-6 col-md-4">
+    <img src="images/photo2.jpg" class="img-fluid rounded" alt="Фото 2" loading="lazy">
+  </div>
+  <div class="col-12 col-sm-6 col-md-4">
+    <img src="images/photo3.jpg" class="img-fluid rounded" alt="Фото 3" loading="lazy">
+  </div>
+</div>
+
+-- Текстовий блок / article --
+<article class="card p-3 mt-4">
+  <h3>Заголовок статті</h3>
+  <p>Тіло тексту. Можна використовувати <strong>жирний</strong>, <em>курсив</em>, списки:</p>
+  <ul>
+    <li>Пункт 1</li>
+    <li>Пункт 2</li>
+  </ul>
+</article>
+
+-- Простий alert / повідомлення --
+<div class="alert alert-warning mt-3" role="alert">
+  <strong>Увага!</strong> Це тестове повідомлення.
+</div>
+
+-- Кнопки (варіанти) --
+<button class="btn btn-primary">Primary</button>
+<button class="btn btn-secondary">Secondary</button>
+<button class="btn btn-outline-danger">Outline Danger</button>
+
+-- Форма з інпутами і групою кнопок (форма контакту) --
+<form class="mt-4">
+  <div class="mb-2">
+    <label for="name" class="form-label">Ім'я</label>
+    <input id="name" class="form-control" type="text" placeholder="Ваше ім'я">
+  </div>
+  <div class="mb-2">
+    <label for="email" class="form-label">Email</label>
+    <input id="email" class="form-control" type="email" placeholder="email@example.com">
+  </div>
+  <div class="mb-2">
+    <label for="msg" class="form-label">Повідомлення</label>
+    <textarea id="msg" class="form-control" rows="4" placeholder="Текст повідомлення"></textarea>
+  </div>
+  <div class="d-flex gap-2">
+    <button class="btn btn-success" type="submit">Відправити</button>
+    <button class="btn btn-outline-secondary" type="reset">Очистити</button>
+  </div>
+</form>
+
+-- Нотифікація / badge --
+<span class="badge bg-primary">Новинка</span>
+
+-- Навігаційна панель (проста) --
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Brand</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link active" href="#">Головна</a></li>
+        <li class="nav-item"><a class="nav-link" href="#gallery">Галерея</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+# Як скласти елемент:
+# 1) Виріши макет: row + col-*
+# 2) Додай відступи: mt-*, mb-*, mx-auto
+# 3) Додай вигляд: card, p-3, rounded, shadow
+# 4) Додай функціонал: form-control для input, img-fluid для зображень, btn для кнопок
+
+=======================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://htmlpreview.github.io/?
+
+https://github.com/potapchukdmytro/JS_PD_411
+
+https://github.com/IliushynOlena/JS_PD_411/tree/main
+
+
+	Чтоб получить изменения с GitHub:
+	git pull
+
+	Чтоб отправить изменения:
+	
+git add .
+git commit -m "your message"
+git push
+
+
+
+Свяжи локальный Git с GitHub
+
+	В VS Code открой терминал:
+Ctrl + `
+Вводишь по очереди:
+	✔ Добавляем файлы
+git add .
+	✔ Коммит
+git commit -m "Initial commit"
+	✔ Связываем с GitHub
+git remote add origin https://github.com/ТВОЙ_НИК/09_JavaScript.git
+
+	3. Отправляем всё на GitHub (push)
+git branch -M main
+git push -u origin main
+	Теперь в GitHub появится весь проект.
+
+	🚀 Как делать PULL?
+	После первого пуша — всё просто:
+	Чтоб получить изменения с GitHub:
+git pull
+
+	Чтоб отправить изменения:
+git add .
+git commit -m "your message"
+git push
+
+https://github.com/OlexandrOnokalo/09_JavaScript.git
+
