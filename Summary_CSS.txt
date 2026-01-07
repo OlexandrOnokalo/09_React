@@ -698,4 +698,3 @@ HTML CSS Forms
 Adaptive Design. Media Queries Exam
 
 @media screen - запит що до екрану пристрою
-
