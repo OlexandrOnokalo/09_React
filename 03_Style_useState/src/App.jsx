@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
-import Counter from './pages/counter.jsx'
+import Counter from './pages/Counter.jsx'
+import Restaurant from './pages/Restaurant.jsx'
 
 function App() {
   
@@ -8,7 +9,7 @@ function App() {
   return (
     <>
     <Counter />
-
+    <Restaurant />
     </>
   )
 }
