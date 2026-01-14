@@ -21,7 +21,6 @@ const BookListPage = () => {
                     </Grid>
                 ))}
             </Grid>
-            <BookCreateForm />
         </Box>
     );
 };
