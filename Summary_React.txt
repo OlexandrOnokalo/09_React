@@ -8554,6 +8554,104 @@ key={b.id} - це ми вкзуємо унікальне значення що �
 <Grid> - це контейнер сітка
 
 
+???????????????
+
+
+========================================================
+05_React_Forms
+
+Форми
+в mui
+
+Formik — це бібліотека для React, призначена для керування формами. Вона вирішує типові проблеми, які виникають при роботі з формами у React, і значно зменшує кількість шаблонного коду.
+
+
+npm i formik
+
+https://formik.org/docs/tutorial
+
+import { useFormik } from "formik";
+import { object, string, number } from "yup";
+
+валідація
+
+    const validationScheme = object({
+        title: string().required("Обов'язкове поле").max(100, "Максимальна довжина 100 символів"),
+        author: string().max(100, "Максимальна довжина 100 символів"),
+        genre: string().required("Обов'язкове поле").max(50, "Максимальна довжина 50 символів"),
+        year: number().min(0, "Рік не може бути від'ємним").max(maxYear, `Рік не може бути більшим за ${maxYear}`).required("Обов'язкове поле")
+    });
+
+    const formik = useFormik({
+        initialValues: initValues,    — початкові значення полів
+        onSubmit: handleSubmit   (функція що при успішній валідації)
+		validationSchema: validationScheme         - схема обмежень помилок
+    });
+	
+	const initValues = {
+    title: "",
+    author: "",
+    genre: "",
+    year: "",
+    cover: "",
+};
+
+
+функція для виводу помилок 
+
+    const getError = (prop) => {
+        return formik.touched[prop] && formik.errors[prop] ? (
+            <Typography sx={{ mx: 1, color: "red" }} variant="h7">
+                {formik.errors[prop]}
+            </Typography>
+        ) : null;
+    };
+
+
+
+
+приклад форми інпута
+
+                        <FormControl>
+                            <FormLabel htmlFor="title">Назва</FormLabel>
+                            <TextField
+                                name="title"
+                                placeholder="Назва книги"
+                                autoComplete="title"
+                                autoFocus
+                                fullWidth
+                                variant="outlined"
+                                value={formik.values.title}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                            />
+                        </FormControl>
+                        {getError("title")}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
