@@ -8492,21 +8492,66 @@ function sum(data) {
 sum({ a: 2, b: 3 })
 
 
-
-
-
-
-
-
-
 ========================================================
+04_React_Сollections
 
 
+Material UI
+mui.com
+Щось схоже на бутстраб, але не тільки цсс, а реакт компоненти
+
+npm install @mui/material @emotion/react @emotion/styled
+
+npm install @fontsource/roboto
+
+npm install @mui/icons-material
+
+Колекції
+
+робота з колекціями:
+
+const nums = [1, 2, 3, 4];   - масив
+
+const html = nums.map(i => (  
+	<li>
+		{i}
+	</li>
+		
+));
+
+потім в функції
+
+	return(....
+		<div>
+			{html}
+		</div>
+
+Таким чином в дів виведеться список всіх значень масиву
 
 
+Але роблять одразу в html:
+
+		return(....
+		<div>
+			{
+				<div>
+					books.map(b => (
+						<div key={b.id}>
+							<h3>{b.title}</h3>
+							<h3>{b.author}</h3>
+						</div>
+					))
+			}
+		</div>
+
+key={b.id} - це ми вкзуємо унікальне значення що є в кожного обєкта (це для коректної роботи map
 
 
+для коректної роботи material UI треба вкористовувати їх елементи замість звичайних, на приклад не <div> a <box>
 
+Замість style використовуємо sx
+Замість всіх текстових тегів  - <Typography>
+<Grid> - це контейнер сітка
 
 
 
