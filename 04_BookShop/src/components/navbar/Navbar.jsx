@@ -11,9 +11,9 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import { Link } from "react-router";
 
-const pages = ["Книги", "Автори"];
 const settings = ["Профіль", "Вийти"];
 
 const Navbar = () => {
@@ -46,7 +46,7 @@ const Navbar = () => {
                         variant="h6"
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
+                        href="/"
                         sx={{
                             mr: 2,
                             display: { xs: "none", md: "flex" },
@@ -92,16 +92,16 @@ const Navbar = () => {
                             onClose={handleCloseNavMenu}
                             sx={{ display: { xs: "block", md: "none" } }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem
-                                    key={page}
-                                    onClick={handleCloseNavMenu}
-                                >
-                                    <Typography sx={{ textAlign: "center" }}>
-                                        {page}
-                                    </Typography>
-                                </MenuItem>
-                            ))}
+                            <MenuItem onClick={handleCloseNavMenu}>
+                                <Typography sx={{ textAlign: "center" }}>
+                                    Книги
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem onClick={handleCloseNavMenu}>
+                                <Typography sx={{ textAlign: "center" }}>
+                                    Автори
+                                </Typography>
+                            </MenuItem>
                         </Menu>
                     </Box>
                     <LibraryBooksIcon
@@ -131,15 +131,22 @@ const Navbar = () => {
                             display: { xs: "none", md: "flex" },
                         }}
                     >
-                        {pages.map((page) => (
+                        <Link to="/books">
                             <Button
-                                key={page}
                                 onClick={handleCloseNavMenu}
                                 sx={{ my: 2, color: "white", display: "block" }}
                             >
-                                {page}
+                                Книги
                             </Button>
-                        ))}
+                        </Link>
+                        <Link to="/authors">
+                            <Button
+                                onClick={handleCloseNavMenu}
+                                sx={{ my: 2, color: "white", display: "block" }}
+                            >
+                                Автори
+                            </Button>
+                        </Link>
                     </Box>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">

@@ -8685,14 +8685,111 @@ function handleSubmit - це функція яку виклече кнопка �
 і потім через назву змінної createCallBack викликається функцуя з батьківського елемента addNewBook і їй передаєтся дані formValues з дочірнього елемента
 
 
-const addNewBook ????????????????????
-setBooks
+const newList = [...books, newBook];
+
 ...books - це копіювання масиву, newBook - це елемент що додається в кінець
 
 
 
+========================================================
+07_React_Routes
+
+React Router — це бібліотека для керування маршрутизацією (навігацією) у React-додатках, насамперед у SPA (Single Page Application).
+
+Вона дозволяє змінювати URL у браузері та показувати різні компоненти без перезавантаження сторінки.
+
+https://reactrouter.com/start/declarative/installation
 
 
+
+npm react-router
+
+
+	В main.jsx:
+
+
+import { BrowserRouter } from "react-router";
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+	<BrowserRouter> - огортаємо щоб у всіх дочірніх компонентів був доступ
+		<App />
+	<BrowserRouter />
+  </StrictMode>
+)
+
+
+	в App.jsx
+	
+import { Button } from "@mui/material";
+import { Link } from "react-router";
+
+function App() {
+    return (
+        <>
+            {/* Маршрути */}
+            <Routes>
+                <Route path="/" element={<MainPage />} />
+
+                {/* books */}
+                <Route path="/books" element={<BookListPage />} />
+                <Route path="/bookcreate" element={<BookCreateForm />} />
+
+                {
+                <Route path="/authors" element={<AuthorListPage />} />
+                <Route path="/authorcreate" element={<AuthorsCreateForm />} />
+
+                {/* Якщо вказано шлях якого не існує */}
+                <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+        </>
+    );
+}
+
+Тут path="/authors"  це адреса в по якій буде вимальовуватися елемент <AuthorsListPage />
+
+при вказуванні path="*" елемент NotFoundPage буде вимальовуватись якщо такого шляху немає
+
+
+
+
+є два метода змінювати шлях, у вигляді html і JS
+
+
+Y html: 
+            <Link to="/books">
+                <Button variant="contained" sx={{ mx: 1 }}>
+                    Книги
+                </Button>
+            </Link>
+
+            <Link to="/authors">
+                <Button variant="contained" sx={{ mx: 1 }}>
+                    Автори
+                </Button>
+            </Link>
+
+кнопка загорнута в тег посилання, де вказано "/authors", і відповідно при нажимання кнопки вимальовується тот елемент що був вказаний в маршрутах в App.jsx (<AuthorsListPage />)
+
+
+
+використання if в html на react
+
+<Grid size={books.length % 4 === 0 ? 12 : 3}>
+
+Виходить, якщо довжина букс ділиться на 4 то підставляється значення 12, якщо ні то 3
+
+
+
+Навігація 
+
+хук useNavigate
+
+const navigate = useNavigate();
+
+потім будь де 
+
+navigate("/books"); - перекине на відповідний елемент
 
 
 

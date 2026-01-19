@@ -1,5 +1,4 @@
 import AuthorsCard from "./AuthorsCard";
-import BookCreateForm from "../booksPage/BookCreateForm";
 import { Box, Grid } from "@mui/material";
 import authors from "./authors.json";
 
@@ -21,7 +20,6 @@ const AuthorsListPage = () => {
                     </Grid>
                 ))}
             </Grid>
-            
         </Box>
     );
 };

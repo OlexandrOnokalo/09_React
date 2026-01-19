@@ -7,14 +7,23 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
-import { Box } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from "react";
 
-const BookCard = ({ book }) => {
-    const [isFavorite, setIsFavorite] = useState(false);
+const BookCard = ({ book, deleteCallback, favoriteCallback }) => {
+    const [isFavorite, setIsFavorite] = useState(book.isFavorite);
+
+    const setFavoriteHandle = () => {
+        const favoriteState = !isFavorite
+        setIsFavorite(favoriteState);
+        favoriteCallback(book.id, favoriteState);
+    }
+
+    const deleteClickHandle = () => {
+        deleteCallback(book.id);
+    }
 
     return (
         <Card sx={{ maxWidth: 345, height: "100%" }}>
@@ -27,8 +36,8 @@ const BookCard = ({ book }) => {
                     ></Avatar>
                 }
                 action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon />
+                    <IconButton onClick={deleteClickHandle} color="error" aria-label="settings">
+                        <DeleteIcon />
                     </IconButton>
                 }
                 title={book.title}
@@ -52,7 +61,7 @@ const BookCard = ({ book }) => {
             </CardContent>
             <CardActions disableSpacing>
                 <IconButton
-                    onClick={() => setIsFavorite(!isFavorite)}
+                    onClick={setFavoriteHandle}
                     color={isFavorite ? "error" : ""}
                     aria-label="add to favorites"
                 >

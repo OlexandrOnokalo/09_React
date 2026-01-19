@@ -9,6 +9,7 @@ import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import { useFormik } from "formik";
 import { object, string, number } from "yup";
+import { useNavigate } from "react-router";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: "flex",
@@ -61,9 +62,26 @@ const initValues = {
 };
 
 const BookCreateForm = () => {
-    const handleSubmit = (values) => {
-        console.log(values);
-    };
+    const navigate = useNavigate();
+
+    function handleSubmit(newBook) {
+        let books = [];
+        const localData = localStorage.getItem("books");
+        if (localData) {
+            books = JSON.parse(localData);
+        }
+
+        const id = books.reduce((acc, books) => Math.max(acc, books.id), 0) + 1;
+        newBook.id = id;
+        newBook.isFavorite = false;
+        newBook.cover_url = newBook.cover;
+        delete newBook.cover;
+        const newList = [...books, newBook];
+        localStorage.setItem("books", JSON.stringify(newList));
+
+        // перенаправити користувача на сторінку з книгами
+        navigate("/books");
+    }
 
     const getError = (prop) => {
         return formik.touched[prop] && formik.errors[prop] ? (
@@ -126,7 +144,6 @@ const BookCreateForm = () => {
                                 name="title"
                                 placeholder="Назва книги"
                                 autoComplete="title"
-                                autoFocus
                                 fullWidth
                                 variant="outlined"
                                 value={formik.values.title}
@@ -176,7 +193,6 @@ const BookCreateForm = () => {
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                             />
-                            {/* error */}
                             {getError("year")}
                         </FormControl>
                         <FormControl>
@@ -208,6 +224,22 @@ const BookCreateForm = () => {
 };
 
 export default BookCreateForm;
+
+// function bookList() {
+//     const list = [2, 3];
+
+//     function addNew(value) {
+//         list.push(value);
+//     }
+
+//     // form(addNew);
+//     "<form addCallback={addNew}/>"
+// }
+
+// function form({addCallback}) {
+//     const book = 1;
+//     addCallback(book);
+// }
 
 // const BookCreateForm = () => {
 //     const [values, setValues] = useState({
