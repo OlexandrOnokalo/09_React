@@ -8792,10 +8792,54 @@ const navigate = useNavigate();
 navigate("/books"); - перекине на відповідний елемент
 
 
+========================================================
+08_React_Routes_2
+
+Layouts - шаблон сторінки
+
+створюємо components/layouts/DefaultLayout.jsx
 
 
 
+????????
 
+	<Outlet /> -динамічний компонент, що підставляє сюди інший компонент що відповідає маршруту
+????????
+
+
+		в App.jsx переробляємо марштуризацію
+            <Routes>  
+                <Route path="/" element={<DefaultLayout />}> -- він в собі має перелік дочірніх маршрутів, і буде серед них шукати. DefaultLayout - це шаблон в якому будуть малюватися сторінки з адрес
+                    <Route index element={<MainPage />} />
+
+                    {/* books */}
+                    <Route path="books">
+                        <Route index element={<BookListPage />} />
+                        <Route path="create" element={<BookCreateForm />} />
+                        <Route path="update/:id" element={<BookUpdateForm />} />
+                    </Route>
+
+                    {/* authors */}
+
+                    <Route path="authors">
+                        <Route index element={<AuthorListPage />} />
+                        <Route path="create" element={<AuthorsCreateForm />} />
+                    </Route>
+
+                    {/* Якщо вказано шлях якого не існує */}
+                    <Route path="*" element={<NotFoundPage />} />
+                </Route>
+            </Routes>
+			
+			
+<Routers>
+
+
+ <Route path="update/:id" element={<BookUpdateForm />} />
+
+"update/:id" - тепер має передавати ще Id
+
+<Link to ={'update/$}???????????    - так передаємо id і переходимо
 
 
 
