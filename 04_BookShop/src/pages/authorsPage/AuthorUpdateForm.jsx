@@ -7,8 +7,8 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
-import { useFormik } from "formik";
-import { object, string, number } from "yup";
+import { useNavigate, useParams } from "react-router";
+import { useEffect, useState } from "react";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: "flex",
@@ -30,8 +30,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
-    height: "calc((1 - var(--template-frame-height, 0)) * 100dvh)",
-    minHeight: "100%",
+    minHeight: "calc((1 - var(--template-frame-height, 0)) * 100dvh)",
     padding: theme.spacing(2),
     [theme.breakpoints.up("sm")]: {
         padding: theme.spacing(4),
@@ -52,58 +51,126 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     },
 }));
 
-const initValues = {
-    firstName: "",
-    lastName: "",
-    birthday: "",
-    country: "",
-    image: "",
-};
+const AuthorUpdateForm = () => {
+    const [formValues, setFormValues] = useState({
+        firstName: "",
+        lastName: "",
+        birthday: "", // Initialize as an empty string
+        country: "",
+        image: "",
+    });
+    const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
+    const { id } = useParams();
+
+    useEffect(() => {
+        const localData = localStorage.getItem("authors");
+        if (localData) {
+            const authors = JSON.parse(localData);
+            const author = authors.find((a) => a.id == id);
+            if (!author) {
+                navigate("/authors", { replace: true });
+            }
+            setFormValues({
+                ...author,
+                birthday: author.birthday ? new Date(author.birthday).toISOString().split('T')[0] : "",
+            });
+        } else {
+            navigate("/authors", { replace: true });
+        }
+    }, []);
+
+    function onChangeHandle(event) {
+        const { name, value } = event.target;
+        setFormValues({ ...formValues, [name]: value });
+    }
+
+    function validate() {
+        const validateErrors = {};
+        let result = true;
+
+
+        if (formValues.firstName.length === 0) {
+            validateErrors.firstName = "Обов'язкове поле";
+            result = false;
+        } else if (formValues.firstName.length > 100) {
+            validateErrors.firstName = "Максимальна довжина 100 символів";
+            result = false;
+        }
+
+        if (formValues.lastName.length === 0) {
+            validateErrors.lastName = "Обов'язкове поле";
+            result = false;
+        } else if (formValues.lastName.length > 100) {
+            validateErrors.lastName = "Максимальна довжина 100 символів";
+            result = false;
+        }
 
 
 
+        // birthday
+        if (formValues.birthday) {
+            const birthdayDate = new Date(formValues.birthday);
+            const today = new Date();
+            if (isNaN(birthdayDate.getTime())) {
+                validateErrors.birthday = "Невірний формат дати";
+                result = false;
+            } else if (birthdayDate > today) {
+                validateErrors.birthday = "День народження не може бути в майбутньому";
+                result = false;
+            }
+        } else {
+            validateErrors.birthday = "Обов'язкове поле";
+            result = false;
+        }
 
-const AuthorsCreateForm = () => {
-    const handleSubmit = (values) => {
-        console.log(values);
-    };
+
+        if (formValues.country.length === 0) {
+            validateErrors.country = "Обов'язкове поле";
+            result = false;
+        } else if (formValues.country.length > 50) {
+            validateErrors.country = "Максимальна довжина 50 символів";
+            result = false;
+        }
+
+        return { result: result, errors: validateErrors };
+    }
+
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        const validateResult = validate();
+
+        if (!validateResult.result) {
+            setErrors(validateResult.errors);
+            return;
+        } else {
+            setErrors({});
+        }
+
+        const localData = localStorage.getItem("authors");
+        if (localData) {
+            const authors = JSON.parse(localData);
+            const index = authors.findIndex(a => a.id == id);
+            authors[index] = formValues;
+            localStorage.setItem("authors", JSON.stringify(authors));
+        }
+
+
+        navigate("/authors");
+    }
 
     const getError = (prop) => {
-        return formik.touched[prop] && formik.errors[prop] ? (
+        return errors[prop] ? (
             <Typography sx={{ mx: 1, color: "red" }} variant="h7">
-                {formik.errors[prop]}
+                {errors[prop]}
             </Typography>
         ) : null;
     };
 
-    // validation scheme
-    const maxYear = new Date().getFullYear();
-    const validationScheme = object({
-        firstName: string()
-            .required("Обов'язкове поле")
-            .max(100, "Максимальна довжина 100 символів"),
-        lastName: string()
-            .required("Обов'язкове поле")
-            .max(100, "Максимальна довжина 100 символів"),
-        birthday: number()
-            .min(0, "Рік не може бути від'ємним")
-            .max(maxYear, `Рік не може бути більшим за ${maxYear}`)
-            .required("Обов'язкове поле"),                
-        country: string().max(100, "Максимальна довжина 100 символів"),
-
-
-    });
-
-    // formik
-    const formik = useFormik({
-        initialValues: initValues,
-        onSubmit: handleSubmit,
-        validationSchema: validationScheme,
-    });
-
     return (
         <Box>
-            <SignInContainer direction="column" justifyContent="space-between" sx={{height: 'auto', minHeight: '80dvh'}}>     
+            <SignInContainer direction="column" justifyContent="space-between">
                 <Card variant="outlined">
                     <Typography
                         component="h1"
@@ -113,16 +180,15 @@ const AuthorsCreateForm = () => {
                             fontSize: "clamp(2rem, 10vw, 2.15rem)",
                         }}
                     >
-                        Додавання нового автора
+                        Редагування автора
                     </Typography>
                     <Box
                         component="form"
-                        onSubmit={formik.handleSubmit}
+                        onSubmit={handleSubmit}
                         sx={{
                             display: "flex",
                             flexDirection: "column",
                             width: "100%",
-                            height: "100%",
                             gap: 2,
                         }}
                     >
@@ -135,9 +201,8 @@ const AuthorsCreateForm = () => {
                                 autoFocus
                                 fullWidth
                                 variant="outlined"
-                                value={formik.values.firstName}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
+                                value={formValues.firstName}
+                                onChange={onChangeHandle}
                             />
                         </FormControl>
                         {getError("firstName")}
@@ -149,28 +214,26 @@ const AuthorsCreateForm = () => {
                                 autoComplete="lastName"
                                 fullWidth
                                 variant="outlined"
-                                value={formik.values.lastName}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
+                                value={formValues.lastName}
+                                onChange={onChangeHandle}
                             />
                         </FormControl>
                         {getError("lastName")}
+
                         <FormControl>
                             <FormLabel htmlFor="birthday">Рік народження</FormLabel>
                             <TextField
                                 name="birthday"
-                                placeholder="Рік народження"
+                                placeholder="Дата народження"
                                 autoComplete="birthday"
                                 fullWidth
-                                type="number"
+                                type="date"
                                 variant="outlined"
-                                value={formik.values.birthday}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
+                                value={formValues.birthday}
+                                onChange={onChangeHandle}
                             />
-
                             {getError("birthday")}
-                        </FormControl>                        
+                        </FormControl>
                         <FormControl>
                             <FormLabel htmlFor="country">Країна</FormLabel>
                             <TextField
@@ -179,13 +242,11 @@ const AuthorsCreateForm = () => {
                                 autoComplete="country"
                                 fullWidth
                                 variant="outlined"
-                                value={formik.values.country}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
+                                value={formValues.country}
+                                onChange={onChangeHandle}
                             />
                         </FormControl>
                         {getError("country")}
-
                         <FormControl>
                             <FormLabel htmlFor="image">Фото автора</FormLabel>
                             <TextField
@@ -194,9 +255,8 @@ const AuthorsCreateForm = () => {
                                 autoComplete="image"
                                 fullWidth
                                 variant="outlined"
-                                value={formik.values.image}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
+                                value={formValues.image}
+                                onChange={onChangeHandle}
                             />
                         </FormControl>
                         <Button
@@ -205,7 +265,7 @@ const AuthorsCreateForm = () => {
                             variant="contained"
                             color="error"
                         >
-                            Додати
+                            Зберегти
                         </Button>
                     </Box>
                 </Card>
@@ -214,4 +274,4 @@ const AuthorsCreateForm = () => {
     );
 };
 
-export default AuthorsCreateForm;
+export default AuthorUpdateForm;

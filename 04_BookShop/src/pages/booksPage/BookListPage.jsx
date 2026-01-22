@@ -47,7 +47,7 @@ const BookListPage = () => {
         >
             <Grid container spacing={2} mx="100px" my="50px">
                 {books.map((b) => (
-                    <Grid size={3} key={b.id}>
+                    <Grid size={4} key={b.id}>
                         <BookCard
                             book={b}
                             deleteCallback={deleteBook}
@@ -55,15 +55,15 @@ const BookListPage = () => {
                         />
                     </Grid>
                 ))}
-                <Grid size={books.length % 4 === 0 ? 12 : 3}>
+                <Grid size={books.length % 3 === 0 ? 12 : 4}>
                     <Box
                         width="100%"
                         display="flex"
                         justifyContent="center"
                         alignItems="center"
                         height="100%"
-                    >
-                        <Link to="/bookcreate">
+                    >   
+                        <Link to="create">
                             <IconButton color="secondary">
                                 <AddCircleIcon sx={{ fontSize: "3em" }} />
                             </IconButton>

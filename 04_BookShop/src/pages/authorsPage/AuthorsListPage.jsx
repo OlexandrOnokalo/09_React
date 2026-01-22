@@ -64,7 +64,7 @@ const AuthorsListPage = () => {
                         alignItems="center"
                         height="100%"
                     >
-                        <Link to="/authorcreate">
+                        <Link to="create">
                             <IconButton color="secondary">
                                 <AddCircleIcon sx={{ fontSize: "3em" }} />
                             </IconButton>

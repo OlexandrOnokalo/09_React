@@ -8,22 +8,23 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
+import { Link } from "react-router";
 
 const BookCard = ({ book, deleteCallback, favoriteCallback }) => {
     const [isFavorite, setIsFavorite] = useState(book.isFavorite);
 
     const setFavoriteHandle = () => {
-        const favoriteState = !isFavorite
+        const favoriteState = !isFavorite;
         setIsFavorite(favoriteState);
         favoriteCallback(book.id, favoriteState);
-    }
+    };
 
     const deleteClickHandle = () => {
         deleteCallback(book.id);
-    }
+    };
 
     return (
         <Card sx={{ maxWidth: 345, height: "100%" }}>
@@ -36,7 +37,11 @@ const BookCard = ({ book, deleteCallback, favoriteCallback }) => {
                     ></Avatar>
                 }
                 action={
-                    <IconButton onClick={deleteClickHandle} color="error" aria-label="settings">
+                    <IconButton
+                        onClick={deleteClickHandle}
+                        color="error"
+                        aria-label="settings"
+                    >
                         <DeleteIcon />
                     </IconButton>
                 }
@@ -67,9 +72,11 @@ const BookCard = ({ book, deleteCallback, favoriteCallback }) => {
                 >
                     <FavoriteIcon />
                 </IconButton>
-                <IconButton aria-label="share">
-                    <ShareIcon />
-                </IconButton>
+                <Link to={`update/${book.id}`}>
+                    <IconButton color="success" aria-label="share">
+                        <EditIcon />
+                    </IconButton>
+                </Link>
             </CardActions>
         </Card>
     );
