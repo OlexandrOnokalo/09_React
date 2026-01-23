@@ -8801,10 +8801,13 @@ Layouts - шаблон сторінки
 
 
 
-????????
+            <Container sx={{minHeight: "100vh"}}>
+                <Outlet />
+            </Container>
+
 
 	<Outlet /> -динамічний компонент, що підставляє сюди інший компонент що відповідає маршруту
-????????
+
 
 
 		в App.jsx переробляємо марштуризацію
@@ -8839,7 +8842,58 @@ Layouts - шаблон сторінки
 
 "update/:id" - тепер має передавати ще Id
 
-<Link to ={'update/$}???????????    - так передаємо id і переходимо
+<Link to={`update/${book.id}`}>
+                    <IconButton color="success" aria-label="share">
+                        <EditIcon />
+                    </IconButton>
+         </Link> 
+
+ - так передаємо id і переходимо
+
+========================================================
+09_React_useRef
+
+хук UseRef - те саме що useState, але не викликає рендер
+
+в js пишем 
+const emailRef = useRef(null);
+
+в HTML 
+	<TextField
+                                inputRef={emailRef}
+                                type="email"
+                                name="email"
+                                placeholder="your@email.com"
+                                autoComplete="email"
+                                autoFocus
+                                required
+                                fullWidth
+                                variant="outlined"
+                            />
+
+
+
+	inputref={emailRef}  - ми привязуємо змінну до конкретного елемента
+
+те саме що і emailRef = document.getElemntById("email");
+
+щоб отримати доступ - emailRef.current
+
+
+Тернарний оператор 
+{isLoggedIn ? <h1>Вітаю!</h1> : <h1>Увійдіть у систему</h1>}
+
+Після ? if, після : else
+
+Альтернатива, чиста умова без else
+{!is Auth &&}   - if без else
+
+
+
+
+
+
+
 
 
 
