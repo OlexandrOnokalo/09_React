@@ -8888,6 +8888,126 @@ const emailRef = useRef(null);
 Альтернатива, чиста умова без else
 {!is Auth &&}   - if без else
 
+========================================================
+10_React_useContext
+
+
+
+useContext у React — це хук, який дозволяє компонентам отримувати доступ до глобальних даних без передачі їх через props на кожному рівні ієрархії.
+
+Context
+
+context/AuthContext.jsx
+
+export const AuthContex = createContext(null); - 
+
+export const AuthProvidor = ({children}) => {
+	
+	function login() {
+        setIsAuth(true);
+    }
+
+    function logout() {
+        setIsAuth(false);
+        localStorage.removeItem("auth");
+    }
+
+    return (
+        <AuthContext.Provider value={{ isAuth, login, logout }}>
+            {children}
+        </AuthContext.Provider>
+    )
+
+}
+
+тут children - дочірні компоненти, які будуть мати доступ до контексту
+createContext(null); - саме сховище
+AuthProvidor касомний провайдер, обовязково робимо, це наповнення сховища
+
+
+тепер в main.jsx треба підключити контекст
+
+import { AuthProvider } from "./context/AuthContext.jsx";
+
+і ложимо в середину цього тегу App (або інший компонент якому ми хочему дати доступ до контексту
+
+createRoot(document.getElementById("root")).render(
+    <StrictMode>
+        <BrowserRouter>
+            <AuthProvider>
+                <App />
+            </AuthProvider>
+        </BrowserRouter>
+    </StrictMode>,
+);
+
+І тепер App має доступ до контексту
+
+
+В тому компоненті, де хочу використовувати:
+
+import { useAuth } from "../../context/AuthContext";
+
+
+function navbar
+
+	const{ isAuth, login, logout} = useContext(AuthContext); - тепер є доступ до isAuth 
+
+
+Тепер робим свій хук
+export const useAuth = () => useContext(AuthContext);
+
+тепер замість useContext(AuthContext) пишем useAuth()
+
+типу як посилання на функцію
+
+
+
+			Теми
+
+import { createTheme } from "@mui/material";
+
+export const darkTheme = createTheme({
+    palette: {
+        mode: "dark",
+        primary: {
+            light: "#f5f5f5",
+            main: "#9e9e9e",
+            dark: "#616161",
+        },
+        secondary: {
+            main: "#CDDC39"
+        },
+    },
+});
+
+mode: "dark",  -  вбудована в mui темний режим
+
+
+Щоб підключити тему, треба огорнути маршрути в <ThemeProvider
+
+в App.jsx
+
+import { ThemeProvider } from "@mui/material";
+import { lightTheme } from "./theme/lightTheme";
+import { darkTheme } from "./theme/darkTheme";
+
+
+	return(
+		<ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+			<Routes>
+			....
+			<Routes />
+		<ThemeProvider />
+	
+	....
+
+
+
+
+
+
+
 
 
 
