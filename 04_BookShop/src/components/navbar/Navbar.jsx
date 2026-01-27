@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,18 +7,22 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import { Tooltip, Avatar } from "@mui/material";
 import { Link } from "react-router";
+import { useAuth } from "../../context/AuthContext";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 
 const settings = ["Профіль", "Вийти"];
 
-const Navbar = () => {
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
+const Navbar = ({ isDark, setIsDark }) => {
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
+
+    const { isAuth, logout } = useAuth();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -35,8 +39,17 @@ const Navbar = () => {
         setAnchorElUser(null);
     };
 
+    const logoutButtonHandler = () => {
+        logout();
+        handleCloseUserMenu();
+    };
+
+    const changeThemeHandle = () => {
+        setIsDark(!isDark);
+    };
+
     return (
-        <AppBar position="static" color="error">
+        <AppBar position="static" color="primary">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <LibraryBooksIcon
@@ -148,18 +161,49 @@ const Navbar = () => {
                             </Button>
                         </Link>
                     </Box>
+                    <Box sx={{ flexGrow: 0, mx: 5 }}>
+                        <IconButton
+                            onClick={changeThemeHandle}
+                            sx={{ color: "white" }}
+                        >
+                            {isDark ? <LightModeIcon /> : <DarkModeIcon />}
+                        </IconButton>
+                    </Box>
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
-                            <IconButton
-                                onClick={handleOpenUserMenu}
-                                sx={{ p: 0 }}
-                            >
-                                <Avatar
-                                    alt="Remy Sharp"
-                                    src="/static/images/avatar/2.jpg"
-                                />
-                            </IconButton>
-                        </Tooltip>
+                        {isAuth ? (
+                            <>
+                                <Tooltip title="Open settings">
+                                    <IconButton
+                                        onClick={handleOpenUserMenu}
+                                        sx={{ p: 0 }}
+                                    >
+                                        <Avatar
+                                            alt="Remy Sharp"
+                                            src="/static/images/avatar/2.jpg"
+                                        />
+                                    </IconButton>
+                                </Tooltip>
+                            </>
+                        ) : (
+                            <>
+                                <Link to="/login">
+                                    <Button
+                                        onClick={handleCloseNavMenu}
+                                        sx={{ color: "white" }}
+                                    >
+                                        Увійти
+                                    </Button>
+                                </Link>
+                                <Link to="/register">
+                                    <Button
+                                        onClick={handleCloseNavMenu}
+                                        sx={{ color: "white" }}
+                                    >
+                                        Зареєструватися
+                                    </Button>
+                                </Link>
+                            </>
+                        )}
                         <Menu
                             sx={{ mt: "45px" }}
                             id="menu-appbar"
@@ -176,16 +220,16 @@ const Navbar = () => {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            {settings.map((setting) => (
-                                <MenuItem
-                                    key={setting}
-                                    onClick={handleCloseUserMenu}
-                                >
-                                    <Typography sx={{ textAlign: "center" }}>
-                                        {setting}
-                                    </Typography>
-                                </MenuItem>
-                            ))}
+                            <MenuItem onClick={handleCloseUserMenu}>
+                                <Typography sx={{ textAlign: "center" }}>
+                                    Профіль
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem onClick={logoutButtonHandler}>
+                                <Typography sx={{ textAlign: "center" }}>
+                                    Вийти
+                                </Typography>
+                            </MenuItem>
                         </Menu>
                     </Box>
                 </Toolbar>

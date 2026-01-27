@@ -4,12 +4,14 @@ import authorsJson from "./authors.json";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Link } from "react-router";
 import { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 
 // sx == style
 
 const AuthorsListPage = () => {
         const [authors, setAuthors] = useState([]);
+        const { isAdmin } = useAuth();
 
     // спрацює тільки при першому рендері
     useEffect(() => {
@@ -56,21 +58,23 @@ const AuthorsListPage = () => {
                         />
                     </Grid>
                 ))}
-                <Grid size={authors.length % 4 === 0 ? 12 : 3}>
-                    <Box
-                        width="100%"
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                        height="100%"
-                    >
-                        <Link to="create">
-                            <IconButton color="secondary">
-                                <AddCircleIcon sx={{ fontSize: "3em" }} />
-                            </IconButton>
-                        </Link>
-                    </Box>
-                </Grid>
+                {isAdmin() && (
+                    <Grid size={authors.length % 4 === 0 ? 12 : 3}>
+                        <Box
+                            width="100%"
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            height="100%"
+                        >
+                            <Link to="create">
+                                <IconButton color="secondary">
+                                    <AddCircleIcon sx={{ fontSize: "3em" }} />
+                                </IconButton>
+                            </Link>
+                        </Box>
+                    </Grid>
+                )}
             </Grid>
         </Box>
     );

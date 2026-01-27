@@ -4,10 +4,12 @@ import booksJson from "./books.json";
 import { Box, Grid, IconButton } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Link } from "react-router";
+import { useAuth } from "../../context/AuthContext";
 
 // sx == style
 const BookListPage = () => {
     const [books, setBooks] = useState([]);
+    const { isAdmin } = useAuth();
 
     // спрацює тільки при першому рендері
     useEffect(() => {
@@ -55,21 +57,23 @@ const BookListPage = () => {
                         />
                     </Grid>
                 ))}
-                <Grid size={books.length % 3 === 0 ? 12 : 4}>
-                    <Box
-                        width="100%"
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                        height="100%"
-                    >   
-                        <Link to="create">
-                            <IconButton color="secondary">
-                                <AddCircleIcon sx={{ fontSize: "3em" }} />
-                            </IconButton>
-                        </Link>
-                    </Box>
-                </Grid>
+                {isAdmin() && (
+                    <Grid size={books.length % 3 === 0 ? 12 : 4}>
+                        <Box
+                            width="100%"
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            height="100%"
+                        >   
+                            <Link to="create">
+                                <IconButton color="secondary">
+                                    <AddCircleIcon sx={{ fontSize: "3em" }} />
+                                </IconButton>
+                            </Link>
+                        </Box>
+                    </Grid>
+                )}
             </Grid>
         </Box>
     );

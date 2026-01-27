@@ -10,10 +10,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from "react-router";
+import { useAuth } from '../../context/AuthContext';
 
 
 const AuthorsCard = ({ author, deleteCallback, favoriteCallback }) => {
   const [isFavorite, setIsFavorite] = useState(author.isFavorite);
+  const { isAdmin } = useAuth();
 
   const setFavoriteHandle = () => {
     const favoriteState = !isFavorite
@@ -53,17 +55,21 @@ const AuthorsCard = ({ author, deleteCallback, favoriteCallback }) => {
         >
           <FavoriteIcon />
         </IconButton>
-        <Link to={`update/${author.id}`}>
-          <IconButton color="success" aria-label="share">
-            <EditIcon />
-          </IconButton>
-        </Link>
-        <IconButton
-          onClick={deleteClickHandle}
-          aria-label="delete"
-        >
-          <DeleteIcon />
-        </IconButton>
+        {isAdmin() && (
+          <>
+            <Link to={`update/${author.id}`}>
+              <IconButton color="success" aria-label="share">
+                <EditIcon />
+              </IconButton>
+            </Link>
+            <IconButton
+              onClick={deleteClickHandle}
+              aria-label="delete"
+            >
+              <DeleteIcon />
+            </IconButton>
+          </>
+        )}
       </CardActions>
     </Card>
   );

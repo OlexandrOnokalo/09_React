@@ -3,10 +3,10 @@ import Footer from "../footer/Footer";
 import Navbar from "../navbar/Navbar";
 import { Outlet } from "react-router";
 
-const DefaultLayout = () => {
+const DefaultLayout = ({isDark, setIsDark}) => {
     return (
         <>
-            <Navbar />
+            <Navbar isDark={isDark} setIsDark={setIsDark}/>
             <Container sx={{minHeight: "100vh"}}>
                 <Outlet />
             </Container>
