@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -61,7 +61,14 @@ const RegisterPage = () => {
     const passwordRef = useRef(null);
     const confirmPasswordRef = useRef(null);
     const navigate = useNavigate();
-    const { register } = useAuth();
+    const { register, isAuth } = useAuth();
+
+    // Перенаправляємо аутентифікованих користувачів на домашню сторінку
+    useEffect(() => {
+        if (isAuth) {
+            navigate("/", { replace: true });
+        }
+    }, [isAuth, navigate]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -83,9 +90,6 @@ const RegisterPage = () => {
         const registerResult = register(formData.email, formData.password);
         if (registerResult.success) {
             setMessage({ type: "success", text: `${registerResult.message} Ваша роль: ${registerResult.user.role.toUpperCase()}` });
-            setTimeout(() => {
-                navigate("/", { replace: true });
-            }, 1500);
         } else {
             setMessage({ type: "error", text: registerResult.message });
         }

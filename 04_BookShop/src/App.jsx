@@ -60,15 +60,8 @@ function App() {
                         </Route>
 
                         {/* auth */}
-
-                        {/* if(!isAuth){ retun <Route/> } */}
-
-                        {!isAuth && (
-                            <>
-                                <Route path="login" element={<LoginPage />} />
-                                <Route path="register" element={<RegisterPage />} />
-                            </>
-                        )}
+                        <Route path="login" element={<LoginPage />} />
+                        <Route path="register" element={<RegisterPage />} />
 
                         {/* Якщо вказано шлях якого не існує */}
                         <Route path="*" element={<NotFoundPage />} />

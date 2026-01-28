@@ -17,6 +17,7 @@ import ForgotPassword from "./../components/ForgotPassword";
 import { Link, useNavigate } from "react-router";
 import { GoogleIcon, FacebookIcon } from "./../components/CustomIcons";
 import Alert from "@mui/material/Alert";
+import { useEffect } from "react";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: "flex",
@@ -66,7 +67,14 @@ const LoginPage = () => {
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
     const navigate = useNavigate();
-    const { loginUser } = useAuth();
+    const { loginUser, isAuth } = useAuth();
+
+    // Перенаправляємо аутентифікованих користувачів на домашню сторінку
+    useEffect(() => {
+        if (isAuth) {
+            navigate("/", { replace: true });
+        }
+    }, [isAuth, navigate]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -95,9 +103,6 @@ const LoginPage = () => {
         const loginResult = loginUser(cred.email, cred.password);
         if (loginResult.success) {
             setMessage({ type: "success", text: loginResult.message });
-            setTimeout(() => {
-                navigate("/", { replace: true });
-            }, 500);
         } else {
             setMessage({ type: "error", text: loginResult.message });
         }
