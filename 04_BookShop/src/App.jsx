@@ -9,7 +9,6 @@ import MainPage from "./pages/mainPage/MainPage";
 import DefaultLayout from "./components/layouts/DefaultLayout";
 import BookUpdateForm from "./pages/booksPage/BookUpdateForm";
 import LoginPage from "./pages/auth/loginPage/LoginPage";
-import RegisterPage from "./pages/auth/registerPage/RegisterPage";
 import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "@mui/material";
@@ -23,8 +22,7 @@ function App() {
     useEffect(() => {
         const authData = localStorage.getItem("auth");
         if (authData) {
-            const user = JSON.parse(authData);
-            login(user);
+            login();
         }
     }, []);
 
@@ -60,8 +58,12 @@ function App() {
                         </Route>
 
                         {/* auth */}
-                        <Route path="login" element={<LoginPage />} />
-                        <Route path="register" element={<RegisterPage />} />
+
+                        {/* if(!isAuth){ retun <Route/> } */}
+
+                        {!isAuth && (
+                            <Route path="login" element={<LoginPage />} />
+                        )}
 
                         {/* Якщо вказано шлях якого не існує */}
                         <Route path="*" element={<NotFoundPage />} />
