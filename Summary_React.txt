@@ -9004,14 +9004,68 @@ import { darkTheme } from "./theme/darkTheme";
 
 
 
+========================================================
+11_React_axios
 
 
 
+https://bigbookapi.com/
+
+Запити на API
 
 
 
+	
+	
+	
+Axios — це популярна JavaScript-бібліотека для виконання HTTP-запитів (GET, POST, PUT, DELETE тощо). У React її найчастіше використовують для отримання або відправки даних на бекенд (API).
+	
+
+    async function fetchBooks() {
+        const baseUrl = "https://api.bigbookapi.com/search-books";
+        const apiKey = "c1f49f3322114f2db440d348114e1a0e";
+        const pageCount = 15;
+        const url = `${baseUrl}?min-rating=0.5&number=${pageCount}&api-key=${apiKey}`;
+	
+	? ставится що потім будуть атрибути запиту. Поле = значення, і між ними &&
+	
+	
+        const response = await axios.get(url);
+        const { data, status } = response;
 
 
+
+========================================================
+12_React_Books_CRUD_operations
+
+В корні проекту робимо файл .env
+
+Це файл для загальних змінних
+
+VITE_BASE_API_URL=??????
+
+VITE_ на початку назви писати  обовязково 
+
+щоб витягнути
+
+	const baseUrl = import.meta.env.VITE_BASE_API_URL; 
+	
+	
+CRUD
+ 
+ 
+import axios from ????
+
+	const bookUrl = import?????????????
+	
+	axios.post(??????
+	
+	????????????
+booksUrl - це стрінга, посилання
+newBook - обєкт що додаємо
+
+
+axios.delete(??????
 
 
 
