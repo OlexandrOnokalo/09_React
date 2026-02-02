@@ -8899,7 +8899,7 @@ Context
 
 context/AuthContext.jsx
 
-export const AuthContex = createContext(null); - 
+export const AuthContex = createContext(null); - саме сховище
 
 export const AuthProvidor = ({children}) => {
 	
@@ -9087,6 +9087,128 @@ delete:
 
 
 
+
+
+========================================================
+13_React - redux
+
+
+redux - одне централізоване сховище де можна зберігати безліч контестів
+
+
+Redux у React — це бібліотека для керування глобальним станом застосунку. Вона потрібна тоді, коли дані мають використовуватись у багатьох компонентах і передавати їх через props стає складно або заплутано.
+
+
+
+
+
+
+
+npm install @reduxjs/toolkit
+npm install react-redux
+
+
+
+main.jsx
+
+import { Provider } from "react-redux";
+
+createRoot(document.getElementById("root")).render(
+
+    <Provider store={store}>
+        <BrowserRouter>
+            <AuthProvider>
+                <App />
+            </AuthProvider>
+        </BrowserRouter>
+    </Provider>,
+);
+
+Вкладаємо все в тег провайдера сховища
+
+
+
+створюємо папку store, там все що звязано з redux
+
+src\store\reducers\bookReducer\bookReducer.js 
+
+const initState = {
+    books: [],
+    isLoaded: false
+} - це дефолтне значення
+
+export const bookReducer = (state = initState, action) => {
+    return state
+}  - приймає стейт і екшен
+
+
+
+
+src\store\store.js
+
+import { configureStore } from "@reduxjs/toolkit";
+import { rootReducer } from "./reducers/rootReducer";   - імпортиуємо редюсер
+
+export const store = configureStore({
+    reducer: rootReducer
+})  - створюємо сховище, в неї передаємо головний редюсер, в якому всі редюсери будуть лежати
+
+
+
+
+
+
+
+store\reducers\rootReducer.js
+
+import { combineReducers } from "@reduxjs/toolkit"
+import { bookReducer } from "./bookReducer/bookReducer"
+
+export const rootReducer = combineReducers({
+    book: bookReducer
+})  -  збираємо всі редюсери в один великий і експортуєм в стор
+
+записуються в форматі  name: reducer
+
+
+екшен сам створюється, але має таку структуру:
+const action ={
+	type: "loadBooks",  - те на що ми реагуємо
+	payload: null - дані які ми повинні записати в наш стейт
+}
+
+
+export const bookReducer = (state = initState, action) => {
+    switch(action.type){
+		case "loadbooks":
+			return {...state, isLoaded:true, books:action.payload};
+		default:
+			return state;
+	
+	}
+}
+
+
+		як записувати:
+
+BookListPage.jsx
+
+import { useDispatch useSelector } from ????
+
+const dispatch = useDispach(); - хук віддає нам функцію dispatch, яка генерує екшени
+
+
+dispatch({type:"loadBooks", payload:booksData}); - отак передаються дані до редусера який вже і збереже в store
+
+type:"loadBooks" - унікальна назва, саме по ній реагує редусер який має вносити зміни
+
+	
+	
+		як вичитати:
+
+const { books, isLloaded } = useSelector(state => state.book);
+
+book - назва відповідного редюсеру
 
 
 
