@@ -13,22 +13,24 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import { Link } from "react-router";
 import { Rating } from "@mui/material";
+import { useDispatch } from "react-redux";
+import axios from "axios";
 
-const BookCard = ({ book, deleteCallback, favoriteCallback, onBookClick }) => {
-    const [isFavorite, setIsFavorite] = useState(book.isFavorite);
+const BookCard = ({ book }) => {
+    const dispatch = useDispatch();
 
-    const setFavoriteHandle = () => {
-        const favoriteState = !isFavorite;
-        setIsFavorite(favoriteState);
-        favoriteCallback(book.id, favoriteState);
-    };
-
-    const deleteClickHandle = () => {
-        deleteCallback(book.id);
+    const deleteClickHandle = async () => {
+        const booksUrl = import.meta.env.VITE_BOOKS_URL;
+        try {
+            await axios.delete(`${booksUrl}/${book.id}`);
+            dispatch({ type: "deleteBook", payload: book.id });
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
-        <Card sx={{ maxWidth: 345, height: "100%", cursor: "pointer" }} onClick={() => onBookClick(book.id)}>
+        <Card sx={{ maxWidth: 345, height: "100%" }}>
             <CardHeader
                 avatar={
                     <Avatar
@@ -54,21 +56,19 @@ const BookCard = ({ book, deleteCallback, favoriteCallback, onBookClick }) => {
                 component="img"
                 height="350"
                 image={
-                    book.cover_url
-                        ? book.cover_url
+                    book.image
+                        ? book.image
                         : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
                 }
                 alt={book.title}
             />
             <CardContent sx={{textAlign: "center"}}>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    <Rating readOnly max={10} value={Math.round(book.rating * 10)}/>
+                    <Rating readOnly max={10} value={book.rating * 2}/>
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
                 <IconButton
-                    onClick={setFavoriteHandle}
-                    color={isFavorite ? "error" : ""}
                     aria-label="add to favorites"
                 >
                     <FavoriteIcon />

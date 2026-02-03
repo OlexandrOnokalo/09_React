@@ -8,7 +8,11 @@ import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import { useNavigate, useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import { object, number, string } from "yup";
+import { useEffect } from "react";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: "flex",
@@ -51,109 +55,79 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     },
 }));
 
+const initValues = {
+    title: "",
+    description: "",
+    image: "",
+    rating: 0,
+    number_of_pages: 100,
+    publish_date: new Date().getFullYear(),
+};
+
 const BookUpdateForm = () => {
-    const [formValues, setFormValues] = useState({
-        title: "",
-        author: "",
-        genre: "",
-        year: 0,
-        cover_url: "",
-    });
-    const [errors, setErrors] = useState({});
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
+    const { books } = useSelector((state) => state.book);
 
-    useEffect(() => {
-        const localData = localStorage.getItem("books");
-        if (localData) {
-            const books = JSON.parse(localData);
-            const book = books.find((b) => b.id == id);
-            if (!book) {
-                navigate("/books", { replace: true });
-            }
-            setFormValues(book);
-        } else {
-            navigate("/books", { replace: true });
+    async function handleSubmit(newBook) {
+        delete newBook.author;
+        const booksUrl = import.meta.env.VITE_BOOKS_URL;
+        const response = await axios.put(booksUrl, newBook);
+        if (response.status === 200) {
+            const index = books.findIndex(b => b.id == newBook.id);            
+            let newBooks = [...books];
+            newBooks[index] = newBook;
+            dispatch({ type: "updateBook", payload: newBooks });
+            navigate("/books");
         }
-    }, []);
-
-    function onChangeHandle(event) {
-        const { name, value } = event.target;
-        setFormValues({ ...formValues, [name]: value });
-    }
-
-    function validate() {
-        const validateErrors = {};
-        let result = true;
-
-        // title
-        if (formValues.title.length === 0) {
-            validateErrors.title = "Обов'язкове поле";
-            result = false;
-        } else if (formValues.title.length > 100) {
-            validateErrors.title = "Максимальна довжина 100 символів";
-            result = false;
-        }
-
-        // author
-        if (formValues.author.length > 100) {
-            validateErrors.author = "Максимальна довжина 100 символів";
-            result = false;
-        }
-
-        // genre
-        if (formValues.genre.length === 0) {
-            validateErrors.genre = "Обов'язкове поле";
-            result = false;
-        } else if (formValues.genre.length > 50) {
-            validateErrors.genre = "Максимальна довжина 50 символів";
-            result = false;
-        }
-
-        // year
-        const maxYear = new Date().getFullYear();
-        if (formValues.year < 0) {
-            validateErrors.year = "Рік не може бути від'ємним";
-            result = false;
-        } else if (formValues.year > maxYear) {
-            validateErrors.year = `Рік не може бути більшим за ${maxYear}`;
-            result = false;
-        }
-
-        return { result: result, errors: validateErrors };
-    }
-
-    function handleSubmit(event) {
-        event.preventDefault();
-
-        const validateResult = validate();
-
-        if (!validateResult.result) {
-            setErrors(validateResult.errors);
-            return;
-        } else {
-            setErrors({});
-        }
-
-        const localData = localStorage.getItem("books");
-        if (localData) {
-            const books = JSON.parse(localData);
-            const index = books.findIndex(b => b.id == id);
-            books[index] = formValues;
-            localStorage.setItem("books", JSON.stringify(books));
-        }
-
-        // перенаправити користувача на сторінку з книгами
-        navigate("/books");
     }
 
     const getError = (prop) => {
-        return errors[prop] ? (
+        return formik.touched[prop] && formik.errors[prop] ? (
             <Typography sx={{ mx: 1, color: "red" }} variant="h7">
-                {errors[prop]}
+                {formik.errors[prop]}
             </Typography>
         ) : null;
     };
+
+    // validation scheme
+    const maxYear = new Date().getFullYear();
+    const validationScheme = object({
+        title: string()
+            .required("Обов'язкове поле")
+            .max(100, "Максимальна довжина 100 символів"),
+        publishDate: number()
+            .min(1000, `Рік не може бути меншим за 1000`)
+            .max(maxYear, `Рік не може бути більшим за ${maxYear}`),
+        rating: number()
+            .min(0, `Рейтинг не може бути меншим за 0`)
+            .max(10, `Рейтинг не може бути більшим за 10`),
+        numberOfPages: number().min(1, `Повинна бути хоча б одна сторінка`),
+    });
+
+    // formik
+    const formik = useFormik({
+        initialValues: initValues,
+        onSubmit: handleSubmit,
+        validationSchema: validationScheme,
+    });
+
+    useEffect(() => {
+        const readBook = async () => {
+            const booksUrl = import.meta.env.VITE_BOOKS_URL;
+
+            const response = await axios.get(`${booksUrl}/${id}`);
+            if (response.status === 200) {
+                const { data } = response;
+                const oldBook = data.data;
+                await formik.setValues(oldBook, false);
+            } else {
+                navigate("/books");
+            }
+        };
+        readBook();
+    }, []);
 
     return (
         <Box>
@@ -171,7 +145,7 @@ const BookUpdateForm = () => {
                     </Typography>
                     <Box
                         component="form"
-                        onSubmit={handleSubmit}
+                        onSubmit={formik.handleSubmit}
                         sx={{
                             display: "flex",
                             flexDirection: "column",
@@ -187,63 +161,79 @@ const BookUpdateForm = () => {
                                 autoComplete="title"
                                 fullWidth
                                 variant="outlined"
-                                value={formValues.title}
-                                onChange={onChangeHandle}
+                                value={formik.values.title}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                             />
                         </FormControl>
                         {getError("title")}
                         <FormControl>
-                            <FormLabel htmlFor="author">Автор</FormLabel>
+                            <FormLabel htmlFor="description">Опис</FormLabel>
                             <TextField
-                                name="author"
-                                placeholder="Автор"
-                                autoComplete="author"
+                                name="description"
+                                placeholder="Опис"
                                 fullWidth
                                 variant="outlined"
-                                value={formValues.author}
-                                onChange={onChangeHandle}
+                                value={formik.values.description}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                             />
                         </FormControl>
-                        {getError("author")}
                         <FormControl>
-                            <FormLabel htmlFor="genre">Жанр</FormLabel>
+                            <FormLabel htmlFor="publish_date">Рік</FormLabel>
                             <TextField
-                                name="genre"
-                                placeholder="Жанр"
-                                autoComplete="genre"
-                                fullWidth
-                                variant="outlined"
-                                value={formValues.genre}
-                                onChange={onChangeHandle}
-                            />
-                        </FormControl>
-                        {getError("genre")}
-                        <FormControl>
-                            <FormLabel htmlFor="year">Рік</FormLabel>
-                            <TextField
-                                name="year"
+                                name="publish_date"
                                 placeholder="Рік публікацї"
-                                autoComplete="year"
                                 fullWidth
                                 type="number"
                                 variant="outlined"
-                                value={formValues.year}
-                                onChange={onChangeHandle}
+                                value={formik.values.publish_date}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                             />
-                            {getError("year")}
+                            {getError("publish_date")}
                         </FormControl>
                         <FormControl>
-                            <FormLabel htmlFor="cover_url">
-                                Обкладинка
+                            <FormLabel htmlFor="rating">Рейтинг</FormLabel>
+                            <TextField
+                                name="rating"
+                                placeholder="0-10"
+                                autoComplete="rating"
+                                fullWidth
+                                type="number"
+                                variant="outlined"
+                                value={formik.values.rating}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                            />
+                            {getError("rating")}
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel htmlFor="number_of_pages">
+                                К-сть сторінок
                             </FormLabel>
                             <TextField
-                                name="cover_url"
+                                name="number_of_pages"
+                                placeholder="100"
+                                fullWidth
+                                type="number"
+                                variant="outlined"
+                                value={formik.values.number_of_pages}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                            />
+                            {getError("number_of_pages")}
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel htmlFor="image">Обкладинка</FormLabel>
+                            <TextField
+                                name="image"
                                 placeholder="Обкладинка"
-                                autoComplete="cover"
                                 fullWidth
                                 variant="outlined"
-                                value={formValues.cover_url}
-                                onChange={onChangeHandle}
+                                value={formik.values.image}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                             />
                         </FormControl>
                         <Button

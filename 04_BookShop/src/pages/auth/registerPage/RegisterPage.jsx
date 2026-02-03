@@ -1,10 +1,6 @@
-import { useRef, useState } from "react";
-import { useAuth } from "../../../context/AuthContext";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import CssBaseline from "@mui/material/CssBaseline";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Divider from "@mui/material/Divider";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
@@ -13,9 +9,10 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
-import ForgotPassword from "./../components/ForgotPassword";
 import { Link, useNavigate } from "react-router";
 import { GoogleIcon, FacebookIcon } from "./../components/CustomIcons";
+import { object, string, ref } from "yup";
+import { useFormik } from "formik";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: "flex",
@@ -58,86 +55,68 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     },
 }));
 
-const LoginPage = () => {
-    const [open, setOpen] = useState(false);
-    const [errors, setErrors] = useState({});
-    const emailRef = useRef(null);
-    const passwordRef = useRef(null);
+const RegisterPage = () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
-        const cred = {
-            email: emailRef.current.value,
-            password: passwordRef.current.value,
-        };
-
-        const result = validate(cred);
-        if (!result.result) {
-            setErrors(result.errors);
-            return;
-        } else {
-            setErrors({});
-        }
-
+    const handleSubmit = (userData) => {
+        let users = [];
         const localData = localStorage.getItem("users");
-        if(!localData) {
-            navigate("/register");
+        if(localData) {
+            users = JSON.parse(localData);
         }
-        const users = JSON.parse(localData);
 
-        const user = users.find(u => u.email === cred.email);
+        if(users.length === 0) {
+            userData.role = "admin"
+        } else {
+            userData.role = "user"
+        }
 
-        if(!user || cred.password !== user.password) {
-            alert("Пошта або пароль вказані невірно");
+        const index = users.findIndex(u => u.email === userData.email);
+
+        if(index !== -1) {
+            alert(`Користувач з поштою '${userData.email}' вже існує`);
             return;
         }
 
-        localStorage.setItem("auth", JSON.stringify(user));
-        login();
-        navigate("/", { replace: true });
+        delete userData.confirmPassword;
+        users.push(userData);
+        localStorage.setItem("users", JSON.stringify(users));
+        navigate("/login");
     };
 
-    function validate(formValues) {
-        const validateErrors = {};
-        let result = true;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const validationSchema = object({
+        firstName: string().required("Обов'язкове поле"),
+        lastName: string().required("Обов'язкове поле"),
+        email: string()
+            .required("Обов'язкове поле")
+            .email("Невірний формат пошти"),
+        password: string()
+            .required("Обов'язкове поле")
+            .min(6, "Мінімальна довжина 6 символів"),
+        confirmPassword: string()
+            .required("Обов'язкове поле")
+            .min(6, "Мінімальна довжина 6 символів")
+            .oneOf([ref("password"), null], "Паролі повинні збігатися"),
+    });
 
-        // email
-        if (formValues.email.length === 0) {
-            validateErrors.email = "Обов'язкове поле";
-            result = false;
-        } else if (!emailRegex.test(formValues.email)) {
-            validateErrors.email = "Невірний формат пошти";
-            result = false;
-        }
+    const initValues = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+    };
 
-        // password
-        if (formValues.password.length === 0) {
-            validateErrors.password = "Обов'язкове поле";
-            result = false;
-        } else if (formValues.password.length < 6) {
-            validateErrors.password = "Мінімальна довжина 6 символів";
-            result = false;
-        }
-
-        return { result: result, errors: validateErrors };
-    }
+    const formik = useFormik({
+        initialValues: initValues,
+        onSubmit: handleSubmit,
+        validationSchema: validationSchema,
+    });
 
     const getError = (prop) => {
-        return errors[prop] ? (
+        return formik.errors[prop] ? (
             <Typography sx={{ mx: 1, color: "red" }} variant="h7">
-                {errors[prop]}
+                {formik.errors[prop]}
             </Typography>
         ) : null;
     };
@@ -155,11 +134,11 @@ const LoginPage = () => {
                             fontSize: "clamp(2rem, 10vw, 2.15rem)",
                         }}
                     >
-                        Sign in
+                        Реєстрація
                     </Typography>
                     <Box
                         component="form"
-                        onSubmit={handleSubmit}
+                        onSubmit={formik.handleSubmit}
                         noValidate
                         sx={{
                             display: "flex",
@@ -169,54 +148,87 @@ const LoginPage = () => {
                         }}
                     >
                         <FormControl>
-                            <FormLabel htmlFor="email">Email</FormLabel>
+                            <FormLabel htmlFor="firstName">Ім'я</FormLabel>
                             <TextField
-                                inputRef={emailRef}
+                                type="text"
+                                name="firstName"
+                                placeholder="Джон"
+                                autoComplete="firstName"
+                                autoFocus
+                                fullWidth
+                                variant="outlined"
+                                value={formik.values.firstName}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                            />
+                            {getError("firstName")}
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel htmlFor="lastName">Прізвище</FormLabel>
+                            <TextField
+                                type="text"
+                                name="lastName"
+                                placeholder="Сміт"
+                                autoComplete="lastName"
+                                fullWidth
+                                variant="outlined"
+                                value={formik.values.lastName}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                            />
+                            {getError("lastName")}
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel htmlFor="email">Пошта</FormLabel>
+                            <TextField
                                 type="email"
                                 name="email"
                                 placeholder="your@email.com"
                                 autoComplete="email"
-                                autoFocus
-                                required
                                 fullWidth
                                 variant="outlined"
+                                value={formik.values.email}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                             />
                             {getError("email")}
                         </FormControl>
                         <FormControl>
-                            <FormLabel htmlFor="password">Password</FormLabel>
+                            <FormLabel htmlFor="password">Пароль</FormLabel>
                             <TextField
-                                inputRef={passwordRef}
                                 name="password"
                                 placeholder="••••••"
                                 type="password"
                                 autoComplete="current-password"
                                 fullWidth
                                 variant="outlined"
+                                value={formik.values.password}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                             />
                             {getError("password")}
                         </FormControl>
-                        <FormControlLabel
-                            control={
-                                <Checkbox value="remember" color="primary" />
-                            }
-                            label="Remember me"
-                        />
-                        <ForgotPassword open={open} handleClose={handleClose} />
+                        <FormControl>
+                            <FormLabel htmlFor="confirmPassword">
+                                Підтвердити пароль
+                            </FormLabel>
+                            <TextField
+                                name="confirmPassword"
+                                placeholder="••••••"
+                                type="password"
+                                fullWidth
+                                variant="outlined"
+                                value={formik.values.confirmPassword}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                            />
+                            {getError("confirmPassword")}
+                        </FormControl>
                         <Button type="submit" fullWidth variant="contained">
-                            Sign in
+                            Зареєструватися
                         </Button>
-                        <Link
-                            component="button"
-                            type="button"
-                            onClick={handleClickOpen}
-                            variant="body2"
-                            sx={{ alignSelf: "center" }}
-                        >
-                            Forgot your password?
-                        </Link>
                     </Box>
-                    <Divider>or</Divider>
+                    <Divider>або</Divider>
                     <Box
                         sx={{
                             display: "flex",
@@ -241,12 +253,9 @@ const LoginPage = () => {
                             Sign in with Facebook
                         </Button>
                         <Typography sx={{ textAlign: "center" }}>
-                            Ще не зареєстровані?{" "}
-                            <Link
-                                to="/register"
-                                style={{ alignSelf: "center" }}
-                            >
-                                Зареєструватися
+                            Зареєстровані?{" "}
+                            <Link to="/login" style={{ alignSelf: "center" }}>
+                                Увійти
                             </Link>
                         </Typography>
                     </Box>
@@ -256,4 +265,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default RegisterPage;

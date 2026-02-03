@@ -8,7 +8,10 @@ import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import { useFormik } from "formik";
-import { object, string, number } from "yup";
+import { object, string } from "yup";
+import { useNavigate } from "react-router";
+import axios from "axios";
+import { useDispatch } from "react-redux";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: "flex",
@@ -53,20 +56,30 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 const initValues = {
-    firstName: "",
-    lastName: "",
-    birthday: "",
-    country: "",
+    name: "",
     image: "",
+    birthDate: "",
 };
 
-
-
-
 const AuthorsCreateForm = () => {
-    const handleSubmit = (values) => {
-        console.log(values);
-    };
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    async function handleSubmit(newAuthor) {
+        const authorsUrl = import.meta.env.VITE_AUTHORS_URL;
+
+        const response = await axios.post(authorsUrl, {
+            name: newAuthor.name,
+            image: newAuthor.image,
+            birthDate: new Date(newAuthor.birthDate).toISOString(),
+        });
+        if (response.status === 200) {
+            // Отримуємо створеного автора з відповіді, якщо API повертає його
+            const createdAuthor = response.data.data || { ...newAuthor, id: Date.now(), birth_date: newAuthor.birthDate };
+            dispatch({ type: "createAuthor", payload: createdAuthor });
+            navigate("/authors");
+        }
+    }
 
     const getError = (prop) => {
         return formik.touched[prop] && formik.errors[prop] ? (
@@ -77,21 +90,12 @@ const AuthorsCreateForm = () => {
     };
 
     // validation scheme
-    const maxYear = new Date().getFullYear();
     const validationScheme = object({
-        firstName: string()
+        name: string()
             .required("Обов'язкове поле")
             .max(100, "Максимальна довжина 100 символів"),
-        lastName: string()
-            .required("Обов'язкове поле")
-            .max(100, "Максимальна довжина 100 символів"),
-        birthday: number()
-            .min(0, "Рік не може бути від'ємним")
-            .max(maxYear, `Рік не може бути більшим за ${maxYear}`)
-            .required("Обов'язкове поле"),                
-        country: string().max(100, "Максимальна довжина 100 символів"),
-
-
+        image: string().url("Невірний URL"),
+        birthDate: string().required("Обов'язкове поле"),
     });
 
     // formik
@@ -127,70 +131,30 @@ const AuthorsCreateForm = () => {
                         }}
                     >
                         <FormControl>
-                            <FormLabel htmlFor="firstName">Ім'я</FormLabel>
+                            <FormLabel htmlFor="name">Ім'я</FormLabel>
                             <TextField
-                                name="firstName"
-                                placeholder="Ім'я"
-                                autoComplete="firstName"
+                                id="name"
+                                type="text"
+                                name="name"
+                                placeholder="Введіть ім'я автора"
+                                autoComplete="name"
                                 autoFocus
+                                required
                                 fullWidth
                                 variant="outlined"
-                                value={formik.values.firstName}
+                                value={formik.values.name}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                             />
+                            {getError("name")}
                         </FormControl>
-                        {getError("firstName")}
                         <FormControl>
-                            <FormLabel htmlFor="lastName">Прізвище</FormLabel>
+                            <FormLabel htmlFor="image">Зображення</FormLabel>
                             <TextField
-                                name="lastName"
-                                placeholder="Прізвище автора"
-                                autoComplete="lastName"
-                                fullWidth
-                                variant="outlined"
-                                value={formik.values.lastName}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                            />
-                        </FormControl>
-                        {getError("lastName")}
-                        <FormControl>
-                            <FormLabel htmlFor="birthday">Рік народження</FormLabel>
-                            <TextField
-                                name="birthday"
-                                placeholder="Рік народження"
-                                autoComplete="birthday"
-                                fullWidth
-                                type="number"
-                                variant="outlined"
-                                value={formik.values.birthday}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                            />
-
-                            {getError("birthday")}
-                        </FormControl>                        
-                        <FormControl>
-                            <FormLabel htmlFor="country">Країна</FormLabel>
-                            <TextField
-                                name="country"
-                                placeholder="Країна"
-                                autoComplete="country"
-                                fullWidth
-                                variant="outlined"
-                                value={formik.values.country}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                            />
-                        </FormControl>
-                        {getError("country")}
-
-                        <FormControl>
-                            <FormLabel htmlFor="image">Фото автора</FormLabel>
-                            <TextField
+                                id="image"
+                                type="url"
                                 name="image"
-                                placeholder="Фото автора"
+                                placeholder="Введіть URL зображення"
                                 autoComplete="image"
                                 fullWidth
                                 variant="outlined"
@@ -198,12 +162,28 @@ const AuthorsCreateForm = () => {
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                             />
+                            {getError("image")}
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel htmlFor="birthDate">Дата народження</FormLabel>
+                            <TextField
+                                id="birthDate"
+                                type="date"
+                                name="birthDate"
+                                required
+                                fullWidth
+                                variant="outlined"
+                                value={formik.values.birthDate}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                            />
+                            {getError("birthDate")}
                         </FormControl>
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            color="error"
+                            disabled={!formik.isValid || !formik.dirty}
                         >
                             Додати
                         </Button>
