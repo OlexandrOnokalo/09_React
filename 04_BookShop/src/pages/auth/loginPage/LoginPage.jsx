@@ -16,8 +16,6 @@ import { styled } from "@mui/material/styles";
 import ForgotPassword from "./../components/ForgotPassword";
 import { Link, useNavigate } from "react-router";
 import { GoogleIcon, FacebookIcon } from "./../components/CustomIcons";
-import Alert from "@mui/material/Alert";
-import { useEffect } from "react";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: "flex",
@@ -63,18 +61,10 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 const LoginPage = () => {
     const [open, setOpen] = useState(false);
     const [errors, setErrors] = useState({});
-    const [message, setMessage] = useState({ type: "", text: "" });
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
     const navigate = useNavigate();
-    const { loginUser, isAuth } = useAuth();
-
-    // Перенаправляємо аутентифікованих користувачів на домашню сторінку
-    useEffect(() => {
-        if (isAuth) {
-            navigate("/", { replace: true });
-        }
-    }, [isAuth, navigate]);
+    const { login } = useAuth();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -100,12 +90,9 @@ const LoginPage = () => {
             setErrors({});
         }
 
-        const loginResult = loginUser(cred.email, cred.password);
-        if (loginResult.success) {
-            setMessage({ type: "success", text: loginResult.message });
-        } else {
-            setMessage({ type: "error", text: loginResult.message });
-        }
+        localStorage.setItem("auth", JSON.stringify(cred));
+        login();
+        navigate("/", { replace: true });
     };
 
     function validate(formValues) {
@@ -157,11 +144,6 @@ const LoginPage = () => {
                     >
                         Sign in
                     </Typography>
-                    {message.text && (
-                        <Alert severity={message.type}>
-                            {message.text}
-                        </Alert>
-                    )}
                     <Box
                         component="form"
                         onSubmit={handleSubmit}

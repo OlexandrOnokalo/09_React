@@ -103,7 +103,7 @@ const AuthorsCreateForm = () => {
 
     return (
         <Box>
-            <SignInContainer direction="column" justifyContent="space-between" sx={{height: 'auto', minHeight: '80dvh'}}>     
+            <SignInContainer direction="column" justifyContent="space-between">
                 <Card variant="outlined">
                     <Typography
                         component="h1"

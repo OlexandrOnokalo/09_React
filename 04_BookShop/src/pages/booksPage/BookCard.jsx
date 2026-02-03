@@ -14,7 +14,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { Rating } from "@mui/material";
 
-const BookCard = ({ book, deleteCallback, favoriteCallback }) => {
+const BookCard = ({ book, deleteCallback, favoriteCallback, onBookClick }) => {
     const [isFavorite, setIsFavorite] = useState(book.isFavorite);
 
     const setFavoriteHandle = () => {
@@ -28,7 +28,7 @@ const BookCard = ({ book, deleteCallback, favoriteCallback }) => {
     };
 
     return (
-        <Card sx={{ maxWidth: 345, height: "100%" }}>
+        <Card sx={{ maxWidth: 345, height: "100%", cursor: "pointer" }} onClick={() => onBookClick(book.id)}>
             <CardHeader
                 avatar={
                     <Avatar

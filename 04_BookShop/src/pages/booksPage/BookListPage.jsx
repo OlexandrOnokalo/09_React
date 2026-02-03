@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import BookCard from "./BookCard";
+import BookDetailModal from "./BookDetailModal";
 import booksJson from "./books.json";
 import { Box, Grid, IconButton, CircularProgress } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -10,6 +11,20 @@ import axios from "axios";
 const BookListPage = () => {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedBookId, setSelectedBookId] = useState(null);
+    const [openModal, setOpenModal] = useState(false);
+
+    // спрацює тільки при першому рендері
+    // useEffect(() => {
+    //     // тут знаходиться код який повинен спрацювати тільки один раз
+    //     const localData = localStorage.getItem("books");
+    //     if (localData) {
+    //         setBooks(JSON.parse(localData));
+    //     } else {
+    //         setBooks(booksJson);
+    //         localStorage.setItem("books", JSON.stringify(booksJson));
+    //     }
+    // }, [])
 
     async function fetchBooks() {
         const baseUrl = "https://api.bigbookapi.com/search-books";
@@ -39,6 +54,11 @@ const BookListPage = () => {
             console.log("Не вдалося завантажити книги");
         }
     }
+
+    const handleBookClick = (id) => {
+        setSelectedBookId(id);
+        setOpenModal(true);
+    };
 
     useEffect(() => {
         const localData = localStorage.getItem("books");
@@ -70,7 +90,7 @@ const BookListPage = () => {
     if (loading) {
         return (
             <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <CircularProgress enableTrackSlot size="3rem" sx={{ mt: 4 }} />;
+                <CircularProgress enableTrackSlot size="3rem" sx={{ mt: 4 }} />
             </Box>
         );
     }
@@ -90,6 +110,7 @@ const BookListPage = () => {
                             book={b}
                             deleteCallback={deleteBook}
                             favoriteCallback={setFavorite}
+                            onBookClick={handleBookClick}
                         />
                     </Grid>
                 ))}
@@ -109,6 +130,7 @@ const BookListPage = () => {
                     </Box>
                 </Grid>
             </Grid>
+            <BookDetailModal open={openModal} onClose={() => setOpenModal(false)} bookId={selectedBookId} />
         </Box>
     );
 };
