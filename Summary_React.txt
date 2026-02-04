@@ -9101,9 +9101,6 @@ Redux у React — це бібліотека для керування глоб�
 
 
 
-
-
-
 npm install @reduxjs/toolkit
 npm install react-redux
 
@@ -9111,6 +9108,7 @@ npm install react-redux
 
 main.jsx
 
+import { store } from "./store/store.js";
 import { Provider } from "react-redux";
 
 createRoot(document.getElementById("root")).render(
@@ -9193,7 +9191,7 @@ export const bookReducer = (state = initState, action) => {
 
 BookListPage.jsx
 
-import { useDispatch useSelector } from ????
+import { useDispatch, useSelector } from "react-redux";
 
 const dispatch = useDispach(); - хук віддає нам функцію dispatch, яка генерує екшени
 
@@ -9212,7 +9210,65 @@ book - назва відповідного редюсеру
 
 
 
- 
+		Action  Екшени
+		
+store\reducers\bookReducer\action.js
+
+В цьому файлі збережемо екшени, які будуть відноситься к книгами
+
+export const loadBook = () => ???????????????????
+
+
+всі екшени збираєм в одне місце
+
+store/redusers/actionCreator.js
+
+import * as bookActions from ?????
+import * as authorActions.....
+
+export const actions = {
+	...bookActions
+}
+
+
+
+Тепер створюємо хук, який буде знати про всі екшени, він буде автоматично їх викликати і передавати їм dispatch
+
+
+store/hooks/useAction.js
+
+
+import { useDispatch } from "react-redux"
+import { bindActionCreators } from "@reduxjs/toolkit"
+import { actions } from "../reducers/actionsCreator"
+
+export const useAction = () => {
+    const dispatch = useDispatch();
+    return bindActionCreators(actions, dispatch);
+}
+
+
+
+і потім через деструктуризацію достаємо бажаний екшен в компоненті:
+
+import { useAction } from "../../store/hooks/useAction";
+
+const { loadBooks } = useAction(); 
+
+і маємо 
+
+loadBooks();
+
+
+
+
+
+
+
+
+
+
+
 
 
 
