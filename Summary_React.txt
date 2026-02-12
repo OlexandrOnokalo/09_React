@@ -9086,7 +9086,7 @@ Axios — це популярна JavaScript-бібліотека для вик�
 
 VITE_BASE_API_URL=https://pd411.somee.com/api/
 VITE_BOOKS_URL=https://pd411.somee.com/api/books
-VITE_AUTHORS_URL=https://pd411.somee.com/api/authorsVITE_BASE_API_URL=??????
+VITE_AUTHORS_URL=https://pd411.somee.com/api/authors
 
 VITE_ на початку назви писати  обовязково 
 
